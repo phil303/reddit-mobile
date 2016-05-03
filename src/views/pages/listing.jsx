@@ -11,6 +11,7 @@ import GoogleCarouselMetadata from '../components/GoogleCarouselMetadata';
 import Post from '../components/listings/Post';
 import Loading from '../components/Loading';
 import TopSubnav from '../components/TopSubnav';
+import RelevantContent from '../components/listings/RelevantContent';
 
 const T = React.PropTypes;
 
@@ -34,6 +35,7 @@ class ListingPage extends BasePage {
       ...this.state,
       editing: false,
       loadingMoreComments: false,
+      expandComments: false
     };
 
     this.onNewComment = this.onNewComment.bind(this);
@@ -42,6 +44,7 @@ class ListingPage extends BasePage {
     this.onDelete = this.onDelete.bind(this);
     this.loadMore = this.loadMore.bind(this);
     this.handleSortChange = this.handleSortChange.bind(this);
+    this.expandComments = this.expandComments.bind(this);
   }
 
   get track () {
@@ -161,8 +164,12 @@ class ListingPage extends BasePage {
     }
   }
 
+  expandComments() {
+    this.setState({ expandComments: true });
+  }
+
   render() {
-    const { data, editing, loadingMoreComments, linkEditError } = this.state;
+    const { data, editing, loadingMoreComments, linkEditError, expandComments } = this.state;
 
     const {
       app,
@@ -171,6 +178,7 @@ class ListingPage extends BasePage {
       ctx,
       token,
       subredditName,
+      listingId
     } = this.props;
 
     const sort = this.props.sort || SORTS.CONFIDENCE;
@@ -182,8 +190,8 @@ class ListingPage extends BasePage {
       return (<Loading />);
     }
 
-    const { user, listing, comments } = data;
-    const { author, permalink } = listing;
+    const { user, listing, comments, relevant, subreddit } = data;
+    const { author, permalink, is_self: isSelfText } = listing;
 
     app.emit('setTitle', { title: listing.title });
 
@@ -202,6 +210,12 @@ class ListingPage extends BasePage {
     let commentsList;
     let googleCarousel;
 
+    const abbreviateComments =
+      !expandComments &&
+      (this.state.feature.enabled('experimentRelevancyTop') ||
+       this.state.feature.enabled('experimentRelevancyRelated') ||
+       this.state.feature.enabled('experimentRelevancyEngaging'));
+
     /*
       comments can be in one of three states:
         1) it is an array of comments
@@ -219,8 +233,39 @@ class ListingPage extends BasePage {
       draw a loading state.
     */
     if (Array.isArray(comments)) {
-      commentsList = comments.map((comment, i) => {
-        const key = `comment-${i}`;
+      let commentsTrees = comments;
+
+      function limitTrees(limit, trees) {
+        if (limit === 0 || !trees || trees.length === 0) {
+          return [0, []];
+        }
+        let first = trees[0];
+        let rest = trees.slice(1);
+        let [count, pruned] = limitTree(limit, first);
+        if (limit > count) {
+          let [restCount, restPruned] = limitTrees(limit - count, rest);
+          return [count + restCount, [pruned].concat(restPruned)];
+        }
+        return [count, [pruned]];
+      }
+
+      function limitTree(limit, tree) {
+        if (limit === 0) {
+          return [0, null];
+        } else if (limit === 1) {
+          return [1, { ...tree, replies: [] }];
+        }
+        let [count, children] = limitTrees(limit - 1, tree.replies);
+        return [count + 1, { ...tree, replies: children }];
+      }
+
+      if (abbreviateComments) {
+        let count;
+        [count, commentsTrees] = limitTrees(3, comments);
+      }
+
+      commentsList = commentsTrees.map((comment, i) => {
+        const key = `comment-${i}-${abbreviateComments}`;
 
         if (comment && comment.body_html !== undefined) {
           return (
@@ -263,6 +308,14 @@ class ListingPage extends BasePage {
         );
       });
 
+      if (abbreviateComments) {
+        commentsList = [commentsList,
+          <a className='listing-comment-collapsed-more' onClick={ this.expandComments } href='#' key='comment-collapsed-more'>
+            Read More
+          </a>
+        ];
+      }
+
       // Show google crawler metadata when the server renders
       if (env === 'SERVER') {
         googleCarousel = (
@@ -278,6 +331,28 @@ class ListingPage extends BasePage {
       }
     } else if (!comments) {
       commentsList = (
+        <div className='Loading-Container'>
+          <Loading />
+        </div>
+      );
+    }
+
+    let relevantContent;
+    if (relevant) {
+      relevantContent = (
+        <RelevantContent
+          feature={ this.state.feature }
+          relevant={ relevant }
+          width={ constants.POST_DEFAULT_WIDTH }
+          subredditName={ subredditName }
+          subreddit={ subreddit }
+          listingId={ listingId }
+          isSelfText={ isSelfText }
+          app={ app }
+        />
+      );
+    } else {
+      relevantContent = (
         <div className='Loading-Container'>
           <Loading />
         </div>
@@ -330,6 +405,7 @@ class ListingPage extends BasePage {
             { singleComment }
             { commentsList }
           </div>
+          { relevantContent }
         </div>
       </div>
     );
