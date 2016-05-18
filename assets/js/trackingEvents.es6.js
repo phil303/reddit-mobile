@@ -2,7 +2,6 @@ import querystring from 'querystring';
 import crypto from 'crypto';
 import EventTracker from 'event-tracker';
 import omit from 'lodash/object/omit';
-import cookies from 'cookies-js';
 
 import constants from '../../src/constants';
 import addIfPresent from '../../src/lib/addIfPresent';
