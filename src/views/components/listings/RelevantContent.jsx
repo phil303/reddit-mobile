@@ -29,7 +29,9 @@ export default class RelevantContent extends BaseComponent {
     width: T.number.isRequired,
     subredditName: T.string,
     subreddit: T.object,
-    listingId: T.string
+    listingId: T.string,
+    loid: T.string.isRequired,
+    loidcreated: T.string.isRequired,
   };
 
   constructor(props) {
@@ -42,9 +44,11 @@ export default class RelevantContent extends BaseComponent {
 
   goToSubreddit(e, { url, id, name, linkName, linkIndex }) {
     e.preventDefault();
-    const { app, isSelfText } = this.props;
+    const { app, isSelfText, loid, loidcreated } = this.props;
     // Send event
     app.emit('click:experiment', {
+      loid,
+      loidcreated,
       experimentName: 'relevancy_mweb',
       linkIndex,
       linkName,
@@ -61,9 +65,11 @@ export default class RelevantContent extends BaseComponent {
 
   goToPost(e, url, id, linkIndex) {
     e.preventDefault();
-    const { app, isSelfText } = this.props;
+    const { app, isSelfText, loid, loidcreated } = this.props;
     // Send event
     app.emit('click:experiment', {
+      loid,
+      loidcreated,
       experimentName: 'relevancy_mweb',
       linkIndex,
       linkName: `top post ${linkIndex}`,

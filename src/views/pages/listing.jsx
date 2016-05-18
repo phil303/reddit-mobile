@@ -205,7 +205,9 @@ class ListingPage extends BasePage {
       ctx,
       token,
       subredditName,
-      listingId
+      listingId,
+      loid,
+      loidcreated,
     } = this.props;
 
     const sort = this.props.sort || SORTS.CONFIDENCE;
@@ -356,6 +358,8 @@ class ListingPage extends BasePage {
           listingId={ listingId }
           isSelfText={ isSelfText }
           app={ app }
+          loid={ loid }
+          loidcreated={ loidcreated }
         />
       );
     } else {

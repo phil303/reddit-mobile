@@ -471,10 +471,9 @@ function trackingEvents(app) {
   });
 
   app.on('click:experiment', function (data) {
-    const loid = cookies.get('loid');
-    const loid_created = cookies.get('loidcreated');
-
     const {
+      loid,
+      loidcreated: loid_created,
       experimentName: experiment_name,
       listingName: listing_name,
       linkIndex: link_index,
