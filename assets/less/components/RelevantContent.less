@@ -1,17 +1,17 @@
 .RelevantContent {
   padding: @grid-size;
-  .dayMode & {
-    background-color: @pale-grey;
-  }
-  .nightMode & {
-    background-color: @black;
-  }
 
   .themeify({
     border-top: @theme-border;
+  },
+  @inDayMode: {
+    background-color: @pale-grey;
+  },
+  @inNightMode: {
+    background-color: @black;
   });
-  .dayMode & .RelevantContent-action,
-  .nightMode & .RelevantContent-action {
+
+  .RelevantContent-action {
     display: block;
     font-size: @font-size-base;
     text-align: center;
@@ -130,14 +130,14 @@
   margin-bottom: @grid-size;
   padding-left: 2 * @grid-size;
 
-  .dayMode & {
-    border-color: lighten(@gray-base, 85%);
-  }
-  .nightMode & {
-    border-color: @gray-darker;
-  }
   .themeify({
     background-color: @theme-body-color;
+  },
+  @inDayMode: {
+    border-color: lighten(@gray-base, 85%);
+  },
+  @inNightMode: {
+    border-color: @gray-darker;
   });
 }
 

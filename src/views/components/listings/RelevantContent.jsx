@@ -3,18 +3,23 @@ import React from 'react';
 import take from 'lodash/array/take';
 import filter from 'lodash/collection/filter';
 
+import constants from '../../../constants';
 import formatNumber from '../../../lib/formatNumber';
 import mobilify from '../../../lib/mobilify';
-import NSFWFlair from '../NSFWFlair';
 
 import BaseComponent from '../BaseComponent';
-import Loading from '../Loading';
 import PostContent from './PostContent';
 import { cleanPostHREF } from './postUtils';
 
 const T = React.PropTypes;
 
 const NUM_LINKS = 3;
+
+const {
+  VARIANT_RELEVANCY_TOP,
+  VARIANT_RELEVANCY_ENGAGING,
+  VARIANT_RELEVANCY_RELATED,
+} = constants.flags;
 
 export default class RelevantContent extends BaseComponent {
   static propTypes = {
@@ -48,7 +53,7 @@ export default class RelevantContent extends BaseComponent {
       targetFullname: id,
       targetUrl: url,
       targetName: name,
-      targetType: 'subreddit'
+      targetType: 'subreddit',
     });
 
     app.redirect(url);
@@ -66,7 +71,7 @@ export default class RelevantContent extends BaseComponent {
       refererUrl: window.location.href,
       targetFullname: id,
       targetUrl: url,
-      targetType: 'link'
+      targetType: 'link',
     });
 
     app.redirect(url);
@@ -85,17 +90,18 @@ export default class RelevantContent extends BaseComponent {
         preview: {},
         ...post,
         thumbnail: post.thumbnail || '/img/placeholder-thumbnail.svg',
-        cleanUrl: '#'
+        cleanUrl: '#',
       };
+      const onClick = (e => this.goToPost(e, url, name, i + 1));
       return (
         <article ref='rootNode' className='Post' key={ id }>
-          <div className='Post__header-wrapper' onClick={ e => this.goToPost(e, url, name, i + 1) }>
+          <div className='Post__header-wrapper' onClick={ onClick }>
             <PostContent
               post={ postWithFallback }
               single={ false }
               compact={ true }
               expandedCompact={ false }
-              onTapExpand={ false }
+              onTapExpand={ function () {} }
               width={ width }
               toggleShowNSFW={ false }
               showNSFW={ false }
@@ -112,42 +118,51 @@ export default class RelevantContent extends BaseComponent {
               <a
                 className={ `PostHeader__post-title-line-blue ${post.visited ? 'm-visited' : ''}` }
                 href='#'
-                onClick={ e => this.goToPost(e, url, name, i + 1) }
-                target={ linkExternally ? '_blank' : null }>
+                onClick={ onClick }
+                target={ linkExternally ? '_blank' : null }
+              >
                 { title }
               </a></div>
               <a
                 className='PostHeader__post-title-line'
                 href='#'
-                onClick={ e => this.goToPost(e, url, name, i + 1) }
-                target={ linkExternally ? '_blank' : null }>
+                onClick={ onClick }
+                target={ linkExternally ? '_blank' : null }
+              >
                 { post.ups } upvotes in r/{ post.subreddit }
               </a>
             </header>
           </div>
         </article>
-    )});
+      );
+    });
   }
 
   render() {
     const {
       feature,
       relevant,
-      width,
       subredditName,
       subreddit,
-      listingId
+      listingId,
     } = this.props;
 
-    if (feature.enabled('experimentRelevancyTop')) {
+    if (feature.enabled(VARIANT_RELEVANCY_TOP)) {
       // Show top posts from this subreddit
       const topLinks = relevant.topLinks;
       const predicate = (link =>
           !link.over_18 &&
           link.id !== listingId &&
           !link.stickied);
-      let links = take(filter(topLinks, predicate), NUM_LINKS);
-      let postList = this.renderPostList(links);
+      const links = take(filter(topLinks, predicate), NUM_LINKS);
+      const postList = this.renderPostList(links);
+      const onActionClick = (e => this.goToSubreddit(e, {
+        url: subreddit.url,
+        id: subreddit.name,
+        name: subreddit.title,
+        linkName: 'top 25 posts',
+        linkIndex: NUM_LINKS + 1,
+      }));
       return (
         <div className='RelevantContent container' key='relevant-container'>
           <div className='RelevantContent-header'>
@@ -160,34 +175,29 @@ export default class RelevantContent extends BaseComponent {
           <a
             className='RelevantContent-action'
             href='#'
-            onClick={ e => this.goToSubreddit(e, {
-              url: subreddit.url,
-              id: subreddit.name,
-              name: subreddit.title,
-              linkName: 'top 25 posts',
-              linkIndex: NUM_LINKS + 1
-            }) }>
+            onClick={ onActionClick }
+          >
               See top 25 Posts
           </a>
         </div>
       );
     }
 
-    if (feature.enabled('experimentRelevancyRelated') ||
-        feature.enabled('experimentRelevancyEngaging')) {
+    if (feature.enabled(VARIANT_RELEVANCY_RELATED) ||
+        feature.enabled(VARIANT_RELEVANCY_ENGAGING)) {
       // Show related or popular/engaging subreddits
       const communities = relevant.communities;
 
       let relevanceTitle = 'Popular Communities';
       let demonym = 'users';
       let icon = 'snoo';
-      let iconColor = 'orangered-circled'; 
+      let iconColor = 'orangered-circled';
       let linkType = 'engaging';
-      if (feature.enabled('experimentRelevancyRelated')) {
+      if (feature.enabled(VARIANT_RELEVANCY_RELATED)) {
         relevanceTitle = 'Gaming Communities';
         demonym = 'gamers';
         icon = 'gaming';
-        iconColor = 'mint-circled'; 
+        iconColor = 'mint-circled';
         linkType = 'related';
       }
 
@@ -200,35 +210,44 @@ export default class RelevantContent extends BaseComponent {
             <span className='RelevantContent-row-text'>{ relevanceTitle }</span>
           </div>
           { communities.map((c, i) => {
-              const clickData = {
-                url: c.url,
-                id: c.name,
-                name: c.title,
-                linkName: `${linkType} subreddit ${i + 1}`,
-                linkIndex: i + 1
-              };
-              return (
-                <div className='SearchPage__community' key={ c.id }>
-                  <div className='CommunityRow'>
-                    <a className='CommunityRow__icon' href='#' onClick={ e => this.goToSubreddit(e, clickData) }>
-                      { c.icon_img
-                        ? <img className='CommunityRow__iconImg' src={ c.icon_img }/>
-                        : <div className='CommunityRow__iconBlank'/> }
-                    </a>
-                    <a className='CommunityRow__details' href='#' onClick={ e => this.goToSubreddit(e, clickData) }>
-                      <div className='CommunityRow__name'>
-                        The { c.display_name } Community
-                      </div>
-                      <div className='CommunityRow__counts'>
-                        Join { formatNumber(c.subscribers) } r/{c.display_name} { demonym }
-                      </div>
-                      <div>
-                        Visit this community
-                      </div>
-                    </a>
-                  </div>
-                </div>);
-              }) }
+            const onClick = (e => this.goToSubreddit(e, {
+              url: c.url,
+              id: c.name,
+              name: c.title,
+              linkName: `${linkType} subreddit ${i + 1}`,
+              linkIndex: i + 1,
+            }));
+            return (
+              <div className='SearchPage__community' key={ c.id }>
+                <div className='CommunityRow'>
+                  <a
+                    className='CommunityRow__icon'
+                    href='#'
+                    onClick={ onClick }
+                  >
+                    { c.icon_img
+                      ? <img className='CommunityRow__iconImg' src={ c.icon_img }/>
+                      : <div className='CommunityRow__iconBlank'/> }
+                  </a>
+                  <a
+                    className='CommunityRow__details'
+                    href='#'
+                    onClick={ onClick }
+                  >
+                    <div className='CommunityRow__name'>
+                      The { c.display_name } Community
+                    </div>
+                    <div className='CommunityRow__counts'>
+                      Join { formatNumber(c.subscribers) } r/{ c.display_name } { demonym }
+                    </div>
+                    <div>
+                      Visit this community
+                    </div>
+                  </a>
+                </div>
+              </div>
+            );
+          }) }
         </div>
       );
     }

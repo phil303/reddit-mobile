@@ -1,40 +1,45 @@
-import cookies from 'cookies-js';
 import Flags from '@r/flags';
 
 import constants from './constants';
 
-const { BETA, SMARTBANNER } = constants.flags;
+const {
+  BETA,
+  SMARTBANNER,
+  VARIANT_RELEVANCY_TOP,
+  VARIANT_RELEVANCY_ENGAGING,
+  VARIANT_RELEVANCY_RELATED,
+} = constants.flags;
 
 const config = {
   [BETA]: true,
   [SMARTBANNER]: true,
-  experimentRelevancyTop: {
+  [VARIANT_RELEVANCY_TOP]: {
     and: {
       subreddit: 'gaming',
       or: [{
         url: 'experimentrelevancytop',
-        variant: 'relevancy_mweb:top'
-      }]
-    }
+        variant: 'relevancy_mweb:top',
+      }],
+    },
   },
-  experimentRelevancyEngaging: {
+  [VARIANT_RELEVANCY_ENGAGING]: {
     and: {
       subreddit: 'gaming',
       or: [{
         url: 'experimentrelevancyengaging',
-        variant: 'relevancy_mweb:engaging'
-      }]
-    }
+        variant: 'relevancy_mweb:engaging',
+      }],
+    },
   },
-  experimentRelevancyRelated: {
+  [VARIANT_RELEVANCY_RELATED]: {
     and: {
       subreddit: 'gaming',
       or: [{
         url: 'experimentrelevancyrelated',
-        variant: 'relevancy_mweb:related'
-      }]
-    }
-  }
+        variant: 'relevancy_mweb:related',
+      }],
+    },
+  },
 };
 
 const flags = new Flags(config);
@@ -132,7 +137,7 @@ flags.addRule('variant', function (name) {
         this.props.app.state.debouncedEvents = debouncedEvents;
       }
     }
-    const eventID = `bucket:${experiment_id}:${this.props.loid}`
+    const eventID = `bucket:${experiment_id}:${this.props.loid}`;
     if (variant && !debouncedEvents[eventID]) {
       debouncedEvents[eventID] = true;
       this.props.app.emit('bucket', {
@@ -140,7 +145,7 @@ flags.addRule('variant', function (name) {
         experiment_name,
         variant,
         loid: this.props.loid,
-        loidcreated: this.props.loidcreated
+        loidcreated: this.props.loidcreated,
       });
     }
     return variant === checkedVariant;

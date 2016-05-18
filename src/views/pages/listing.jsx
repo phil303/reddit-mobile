@@ -15,11 +15,38 @@ import RelevantContent from '../components/listings/RelevantContent';
 
 const T = React.PropTypes;
 
+function limitTrees(limit, trees) {
+  if (limit === 0 || !trees || trees.length === 0) {
+    return [0, []];
+  }
+  const first = trees[0];
+  const rest = trees.slice(1);
+  const [count, pruned] = limitTree(limit, first);
+  if (limit > count) {
+    const [restCount, restPruned] = limitTrees(limit - count, rest);
+    return [count + restCount, [pruned].concat(restPruned)];
+  }
+  return [count, [pruned]];
+}
+
+function limitTree(limit, tree) {
+  if (limit === 0) {
+    return [0, null];
+  } else if (limit === 1) {
+    return [1, { ...tree, replies: [] }];
+  }
+  const [count, children] = limitTrees(limit - 1, tree.replies);
+  return [count + 1, { ...tree, replies: children }];
+}
+
+
 class ListingPage extends BasePage {
   static propTypes = {
     commentId: T.string,
     data: T.object,
     listingId: T.string.isRequired,
+    loid: T.string.isRequired,
+    loidcreated: T.string.isRequired,
     sort: T.string,
     subredditName: T.string,
   };
@@ -35,7 +62,7 @@ class ListingPage extends BasePage {
       ...this.state,
       editing: false,
       loadingMoreComments: false,
-      expandComments: false
+      expandComments: false,
     };
 
     this.onNewComment = this.onNewComment.bind(this);
@@ -212,9 +239,9 @@ class ListingPage extends BasePage {
 
     const abbreviateComments =
       !expandComments &&
-      (this.state.feature.enabled('experimentRelevancyTop') ||
-       this.state.feature.enabled('experimentRelevancyRelated') ||
-       this.state.feature.enabled('experimentRelevancyEngaging'));
+      (this.state.feature.enabled(constants.flags.VARIANT_RELEVANCY_TOP) ||
+       this.state.feature.enabled(constants.flags.VARIANT_RELEVANCY_RELATED) ||
+       this.state.feature.enabled(constants.flags.VARIANT_RELEVANCY_ENGAGING));
 
     /*
       comments can be in one of three states:
@@ -235,33 +262,8 @@ class ListingPage extends BasePage {
     if (Array.isArray(comments)) {
       let commentsTrees = comments;
 
-      function limitTrees(limit, trees) {
-        if (limit === 0 || !trees || trees.length === 0) {
-          return [0, []];
-        }
-        let first = trees[0];
-        let rest = trees.slice(1);
-        let [count, pruned] = limitTree(limit, first);
-        if (limit > count) {
-          let [restCount, restPruned] = limitTrees(limit - count, rest);
-          return [count + restCount, [pruned].concat(restPruned)];
-        }
-        return [count, [pruned]];
-      }
-
-      function limitTree(limit, tree) {
-        if (limit === 0) {
-          return [0, null];
-        } else if (limit === 1) {
-          return [1, { ...tree, replies: [] }];
-        }
-        let [count, children] = limitTrees(limit - 1, tree.replies);
-        return [count + 1, { ...tree, replies: children }];
-      }
-
       if (abbreviateComments) {
-        let count;
-        [count, commentsTrees] = limitTrees(3, comments);
+        [, commentsTrees] = limitTrees(3, comments);
       }
 
       commentsList = commentsTrees.map((comment, i) => {
@@ -310,9 +312,14 @@ class ListingPage extends BasePage {
 
       if (abbreviateComments) {
         commentsList = [commentsList,
-          <a className='listing-comment-collapsed-more' onClick={ this.expandComments } href='#' key='comment-collapsed-more'>
+          <a
+            className='listing-comment-collapsed-more'
+            onClick={ this.expandComments }
+            href='#'
+            key='comment-collapsed-more'
+          >
             Read More
-          </a>
+          </a>,
         ];
       }
 

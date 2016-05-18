@@ -159,7 +159,7 @@ export function userData(ctx, app) {
 
   if (ctx.props.token) {
     const userOptions = Object.assign({}, apiOptions, {
-      user: 'me'
+      user: 'me',
     });
 
     setData(ctx, 'user', 'users', userOptions);
@@ -188,7 +188,7 @@ export function userData(ctx, app) {
     setData(ctx, 'userSubscriptions', 'subreddits', subOptions);
   } else {
     const userOptions = Object.assign({}, apiOptions, {
-      loggedOut: true
+      loggedOut: true,
     });
 
     setData(ctx, 'loggedOutUser', 'users', userOptions);
@@ -453,33 +453,33 @@ function routes(app) {
           data: { user: data.body },
           meta: {},
           loaded: !!props.dataCache,
-          finished: false
-        }
+          finished: false,
+        },
       });
-      if (feature.enabled('experimentRelevancyTop')) {
+      if (feature.enabled(constants.flags.VARIANT_RELEVANCY_TOP)) {
         const linkOpts = buildAPIOptions(ctx, {
           query: {
             subredditName: props.subredditName,
-            sort: 'hot'
-          }
+            sort: 'hot',
+          },
         });
 
         return app.api.links.get(linkOpts).then(data => ({ topLinks: data.body }));
       }
-      if (feature.enabled('experimentRelevancyRelated')) {
+      if (feature.enabled(constants.flags.VARIANT_RELEVANCY_RELATED)) {
         const subreddits = ['xboxone', 'PS4', 'pcgaming'];
         return Promise.all(subreddits.map(id =>
           app.api.subreddits.get(buildAPIOptions(ctx, {
-            id
+            id,
           }))
         )).then(communities => ({ communities }));
       }
 
-      if (feature.enabled('experimentRelevancyEngaging')) {
+      if (feature.enabled(constants.flags.VARIANT_RELEVANCY_ENGAGING)) {
         const subreddits = ['GamePhysics', 'iama', 'gadgets'];
         return Promise.all(subreddits.map(id =>
           app.api.subreddits.get(buildAPIOptions(ctx, {
-            id
+            id,
           }))
         )).then(communities => ({ communities }));
       }

@@ -464,9 +464,9 @@ function trackingEvents(app) {
       variant,
       loid,
       loid_created: loidcreated,
-      loid_new: false
+      loid_new: false,
     };
-    
+
     eventSend('bucketing_events', 'bucket', payload);
   });
 
@@ -485,10 +485,10 @@ function trackingEvents(app) {
       targetName: target_name,
       targetType: target_type,
       userId: user_id,
-      userName: user_name
+      userName: user_name,
     } = data;
 
-    let URL = window.URL || window.webkitURL;
+    const URL = window.URL || window.webkitURL;
     let target_url;
     if (URL) {
       target_url = (new URL(url, window.location.href)).href;
@@ -515,7 +515,7 @@ function trackingEvents(app) {
       target_name,
       target_type, // "subreddit", "link", "self", "subscribe"
       user_id, // base-10 user id
-      user_name // numan-readable name of the user sending the event
+      user_name, // human-readable name of the user sending the event
     };
     eventSend('internal_click_events', 'cs.experiment_click', payload);
   });
