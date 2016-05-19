@@ -47,6 +47,7 @@ export default class RelevantContent extends BaseComponent {
     const { app, isSelfText, loid, loidcreated } = this.props;
     // Send event
     app.emit('click:experiment', {
+      eventType: 'cs.relevant_posts_mweb_click',
       loid,
       loidcreated,
       experimentName: 'relevancy_mweb',
@@ -54,7 +55,7 @@ export default class RelevantContent extends BaseComponent {
       linkName,
       refererPageType: isSelfText ? 'self' : 'link',
       refererUrl: window.location.href,
-      targetFullname: id,
+      targetId: parseInt(id, 36),
       targetUrl: url,
       targetName: name,
       targetType: 'subreddit',
@@ -68,6 +69,7 @@ export default class RelevantContent extends BaseComponent {
     const { app, isSelfText, loid, loidcreated } = this.props;
     // Send event
     app.emit('click:experiment', {
+      eventType: 'cs.relevant_posts_mweb_click',
       loid,
       loidcreated,
       experimentName: 'relevancy_mweb',
@@ -99,6 +101,7 @@ export default class RelevantContent extends BaseComponent {
         cleanUrl: '#',
       };
       const onClick = (e => this.goToPost(e, url, name, i + 1));
+      const noop = (e => e.preventDefault());
       return (
         <article ref='rootNode' className='Post' key={ id }>
           <div className='Post__header-wrapper' onClick={ onClick }>
@@ -124,7 +127,7 @@ export default class RelevantContent extends BaseComponent {
               <a
                 className={ `PostHeader__post-title-line-blue ${post.visited ? 'm-visited' : ''}` }
                 href='#'
-                onClick={ onClick }
+                onClick={ noop }
                 target={ linkExternally ? '_blank' : null }
               >
                 { title }
@@ -132,7 +135,7 @@ export default class RelevantContent extends BaseComponent {
               <a
                 className='PostHeader__post-title-line'
                 href='#'
-                onClick={ onClick }
+                onClick={ noop }
                 target={ linkExternally ? '_blank' : null }
               >
                 { post.ups } upvotes in r/{ post.subreddit }
@@ -164,7 +167,7 @@ export default class RelevantContent extends BaseComponent {
       const postList = this.renderPostList(links);
       const onActionClick = (e => this.goToSubreddit(e, {
         url: subreddit.url,
-        id: subreddit.name,
+        id: subreddit.id,
         name: subreddit.title,
         linkName: 'top 25 posts',
         linkIndex: NUM_LINKS + 1,
@@ -218,7 +221,7 @@ export default class RelevantContent extends BaseComponent {
           { communities.map((c, i) => {
             const onClick = (e => this.goToSubreddit(e, {
               url: c.url,
-              id: c.name,
+              id: c.id,
               name: c.title,
               linkName: `${linkType} subreddit ${i + 1}`,
               linkIndex: i + 1,

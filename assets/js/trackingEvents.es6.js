@@ -471,6 +471,7 @@ function trackingEvents(app) {
 
   app.on('click:experiment', function (data) {
     const {
+      eventType,
       loid,
       loidcreated: loid_created,
       experimentName: experiment_name,
@@ -478,6 +479,7 @@ function trackingEvents(app) {
       linkIndex: link_index,
       linkName: link_name,
       refererPageType: referer_page_type,
+      targetId: target_id,
       targetFullname: target_fullname,
       targetUrl: url,
       targetName: target_name,
@@ -506,7 +508,10 @@ function trackingEvents(app) {
       loid,
       loid_created,
       referer_page_type, // "listing", "link", "self", "comment"
+      target_id, // base-10 id of the target (used for subreddits only)
       // fullname (prefix+base-36 id) of the content at the target location
+      // Currently skipped for subreddit targets to circumvent a data
+      // processing issue
       target_fullname,
       target_url, // clickthrough url of the click
       // human-readable name of the target (only applicable to subreddits)
@@ -515,7 +520,7 @@ function trackingEvents(app) {
       user_id, // base-10 user id
       user_name, // human-readable name of the user sending the event
     };
-    eventSend('internal_click_events', 'cs.experiment_click', payload);
+    eventSend('internal_click_events', eventType, payload);
   });
 }
 
