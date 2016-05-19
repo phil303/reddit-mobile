@@ -65,6 +65,10 @@ function buildAPIOptions(ctx, options={}) {
     apiOptions.headers.Authorization = `bearer ${ctx.token}`;
   }
 
+  if ((ctx.env === 'SERVER') && ctx.loid) {
+    apiOptions.headers.cookie = `loid=${ctx.loid}; loidcreated=${ctx.loidcreated}`;
+  }
+
   if (app.config.apiPassThroughHeaders) {
     let h;
     for (h in ctx.headers) {
