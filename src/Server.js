@@ -83,7 +83,8 @@ export function startServer() {
     template: main,
     reducers,
     reduxMiddleware,
-    dispatchBeforeNavigation: async (ctx, dispatch/*, getState, utils*/) => {
+    dispatchBeforeNavigation: async (ctx, dispatch) => {
+      dispatchInitialMeta(ctx, dispatch);
       dispatchInitialShell(ctx, dispatch);
       dispatchInitialLoid(ctx, dispatch);
       await dispatchSession(ctx, dispatch, ConfigedAPIOptions);

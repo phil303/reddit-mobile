@@ -4,8 +4,10 @@ import * as platformActions from '@r/platform/actions';
 import { models } from '@r/api-client';
 
 import { cleanObject } from 'lib/cleanObject';
+
 import * as commentsPageActions from 'app/actions/commentsPage';
 import * as replyActions from 'app/actions/reply';
+
 import { fetchUserBasedData } from './handlerCommon';
 import { paramsToCommentsPageId } from 'app/models/CommentsPage';
 
@@ -18,7 +20,9 @@ const ensurePostTypePrefix = postId => {
   return `${POST_TYPE}_${postId}`;
 };
 
+
 export default class CommentsPage extends BaseHandler {
+
   static pageParamsToCommentsPageParams({ urlParams, queryParams}) {
     let { postId } = urlParams;
     const { commentId } = urlParams;
@@ -39,6 +43,9 @@ export default class CommentsPage extends BaseHandler {
       sort,
       query,
     });
+  }
+
+  static isPageViewReady(state) {
   }
 
   async [METHODS.GET](dispatch, getState, { waitForState }) {
