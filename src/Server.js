@@ -20,6 +20,7 @@ import registerproxy from 'server/session/registerproxy';
 import refreshproxy from 'server/session/refreshproxy';
 import dispatchSession from 'server/session/dispatchSession';
 import { dispatchInitialCompact } from 'server/initialState/dispatchInitialCompact';
+import { dispatchInitialMeta } from 'server/initialState/dispatchInitialMeta';
 import { dispatchInitialLoid } from 'server/initialState/dispatchInitialLoid';
 import { dispatchInitialMeta } from 'server/initialState/dispatchInitialMeta';
 import { dispatchInitialOver18 } from 'server/initialState/dispatchInitialOver18';
@@ -83,6 +84,7 @@ export function startServer() {
     reducers,
     reduxMiddleware,
     dispatchBeforeNavigation: async (ctx, dispatch/*, getState, utils*/) => {
+      dispatchInitialMeta(ctx, dispatch);
       dispatchInitialShell(ctx, dispatch);
       dispatchInitialLoid(ctx, dispatch);
       await dispatchSession(ctx, dispatch, ConfigedAPIOptions);

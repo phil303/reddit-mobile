@@ -26,6 +26,15 @@ export const failed = (id, error) => ({
   error,
 });
 
+export const OPEN_SEARCH = 'OPEN_SEARCH';
+export const openSearch = () => ({ type: OPEN_SEARCH });
+
+export const CLOSE_SEARCH = 'CLOSE_SEARCH';
+export const closeSearch = () => ({ type: CLOSE_SEARCH });
+
+export const CLEAR_SEARCH = 'CLEAR_SEARCH';
+export const clearSearch = () => ({ type: CLEAR_SEARCH });
+
 export const search = searchParams => async (dispatch, getState) => {
   const state = getState();
   const id = paramsToSearchRequestId(searchParams);

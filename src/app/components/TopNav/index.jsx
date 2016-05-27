@@ -17,6 +17,8 @@ import {
   POST_SUBMIT,
 } from 'app/actions/overlayMenu';
 
+import * as searchActions from 'app/actions/search';
+
 import Logo from 'app/components/Logo';
 import SnooIcon from 'app/components/SnooIcon';
 
@@ -80,6 +82,7 @@ export const TopNav = (props) => {
         <BackAnchor
           className='MobileButton TopNav-floaty'
           href={ urlWithSearchBarToggled(url, queryParams) }
+          onClick={ props.openSearch }
         >
           <span className='icon icon-search icon-large' />
         </BackAnchor>
@@ -105,5 +108,8 @@ const mapStateToProps = createSelector(
     return { overlayMenu, url, queryParams, isLoggedIn };
   },
 );
+const mapDispatchToProps = (dispatch) => ({
+  openSearch: () => dispatch(searchActions.openSearch()),
+});
 
 export default connect(mapStateToProps)(TopNav);
