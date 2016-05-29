@@ -10,6 +10,14 @@ createTest({ reducers: { accountRequests } }, ({ getStore, expect }) => {
   describe('accountRequests', () => {
 
     describe('LOGGED_IN and LOGGED_OUT', () => {
+      it('should return default on log in', () => {
+        const { store } = getStore();
+        store.dispatch({ type: loginActions.LOGGED_IN });
+        const { accountRequests } = store.getState();
+
+        expect(accountRequests).to.eql({});
+      });
+
       it('should return default', () => {
         const { store } = getStore();
         store.dispatch({ type: loginActions.LOGGED_OUT });
