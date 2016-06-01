@@ -9,7 +9,11 @@ import { cleanObject } from 'lib/cleanObject';
 import { listingTime } from 'lib/listingTime';
 import { fetchUserBasedData } from './handlerCommon';
 
+export const NAME = 'PostsFromSubreddit';
+
 export default class PostsFromSubreddit extends BaseHandler {
+  name = NAME;
+
   static pageParamsToSubredditPostsParams({ urlParams, queryParams}) {
     const { multi, multiUser } = urlParams;
     const { sort, after, before } = queryParams;
