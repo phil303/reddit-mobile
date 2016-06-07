@@ -14,6 +14,7 @@ import DirectMessage from './handlers/DirectMessage';
 import Messages from './handlers/Messages';
 import Vote from './handlers/Vote';
 import WikiPageHandler from './handlers/WikiPage';
+import { PostSubmitHandler, PostSubmitCommunityHandler } from './handlers/PostSubmit';
 
 export default [
   ['/', PostsFromSubredditHandler],
@@ -36,6 +37,8 @@ export default [
   ['/login', Login],
   ['/message/compose', DirectMessage],
   ['/message/:mailType', Messages],
+  ['/submit', PostSubmitHandler],
+  ['/submit/to_community', PostSubmitCommunityHandler],
 
   // actions
   ['/vote/:thingId', Vote],

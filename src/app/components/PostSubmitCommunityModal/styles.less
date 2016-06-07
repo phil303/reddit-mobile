@@ -1,0 +1,81 @@
+@import (reference) '~app/less/variables';
+@import (reference) '~app/less/themes/themeify';
+
+.PostSubmitCommunity {
+  &__search {
+    margin: 5px 18px 0;
+
+    .themeify({
+      border-bottom: 1px solid @theme-dark-line-color;
+    });
+
+    .icon {
+      display: inline-block;
+      float: left;
+      font-size: 22px;
+      margin-top: 7px;
+    }
+  }
+
+  &__search-input {
+    overflow: hidden;
+
+    input {
+      font-size: 14px;
+      padding: 10px 12px;
+      width: 100%;
+
+      .themeify({
+        color: @theme-body-text-color;
+      });
+
+      &:focus {
+        outline: none;
+      }
+    }
+  }
+
+  &__subreddits-title {
+    padding: 9px 16px;
+    font-size: 12px;
+
+    .themeify({
+      border-bottom: 1px solid @theme-line-color;
+      color: @theme-meta-text-color;
+    });
+  }
+
+  &__subreddits-list {
+    padding: 15px 13px;
+  }
+
+  &__subreddits-row {
+    margin-bottom: 8px;
+  }
+
+  // TODO: abstract out a component for snoos
+  &__subreddits-icon {
+    display: inline-block;
+    border-radius: 50%;
+    background-color: @blue;
+    overflow: hidden;
+    vertical-align: middle;
+  }
+
+  &__subreddits-icon-snoo {
+    background: url('/img/snoo-64.png') no-repeat;
+    background-size: 100%;
+    width: 32px;
+    height: 32px;
+  }
+
+  &__subreddits-name {
+    display: inline-block;
+    margin-left: 13px;
+    font-size: 16px;
+    
+    .themeify({
+      color: @theme-body-text-color;
+    });
+  }
+}

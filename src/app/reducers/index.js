@@ -1,6 +1,7 @@
 import accounts from './accounts';
 import accountRequests from './accountRequests';
 import activitiesRequests from './activitiesRequests';
+import autocompleteSubreddits from './autocompleteSubreddits';
 import collapsedComments from './collapsedComments';
 import comments from './comments';
 import commentsPages from './commentsPages';
@@ -8,8 +9,10 @@ import compact from './compact';
 import expandedPosts from './expandedPosts';
 import hiddenRequests from './hiddenRequests';
 import loid from './loid';
+import posting from './posting';
 import posts from './posts';
 import postsLists from './postsLists';
+import recentSubreddits from './recentSubreddits';
 import replying from './replying';
 import savedRequests from './savedRequests';
 import searchRequests from './searchRequests';
@@ -29,6 +32,7 @@ export default {
   accounts,
   accountRequests,
   activitiesRequests,
+  autocompleteSubreddits,
   collapsedComments,
   comments,
   commentsPages,
@@ -38,9 +42,11 @@ export default {
   loid,
   mail,
   messages,
+  posting,
   posts,
   postsLists,
   replying,
+  recentSubreddits,
   savedRequests,
   searchRequests,
   session,
