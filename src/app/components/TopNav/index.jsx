@@ -7,11 +7,13 @@ import { Anchor, BackAnchor } from '@r/platform/components';
 
 import {
   OVERLAY_MENU_PARAMETER,
+  urlWithPostSubmitMenuToggled,
   urlWithCommunityMenuToggled,
   urlWithSearchBarToggled,
   urlWithSettingsMenuToggled,
   COMMUNITY_MENU,
   SETTINGS_MENU,
+  POST_SUBMIT,
 } from 'app/actions/overlayMenu';
 
 import Logo from 'app/components/Logo';
@@ -38,6 +40,7 @@ export const TopNav = (props) => {
 
   const settingsOpen = overlayMenu === SETTINGS_MENU;
   const communityMenuOpen = overlayMenu === COMMUNITY_MENU;
+  const submitPostOpen = overlayMenu === POST_SUBMIT;
 
   let sideNavIcon = 'icon icon-menu icon-large';
   if (settingsOpen) {
@@ -46,7 +49,13 @@ export const TopNav = (props) => {
 
   let communityMenuIcon = 'icon icon-nav-arrowdown';
   if (communityMenuOpen) {
+    // TODO: do we mean to re-assign here?
     communityMenuIcon += 'icon icon-nav-arrowup blue';
+  }
+
+  let postSubmitMenuIcon = 'icon icon-post_edit icon-large';
+  if (submitPostOpen) {
+    postSubmitMenuIcon = 'icon icon-nav-close icon-large';
   }
 
   return (
@@ -74,12 +83,12 @@ export const TopNav = (props) => {
         </h1>
       </div>
       <div className='TopNav-padding TopNav-right' key='topnav-actions'>
-        <Anchor
+        <BackAnchor
           className='MobileButton TopNav-floaty'
-          href={ `${currentSubredditPath}/submit` }
+          href={ urlWithPostSubmitMenuToggled(url, queryParams) }
         >
-          <span className='icon icon-post_edit icon-large' />
-        </Anchor>
+          <span className={ postSubmitMenuIcon } />
+        </BackAnchor>
         <BackAnchor
           className='MobileButton TopNav-floaty'
           href={ urlWithSearchBarToggled(url, queryParams) }

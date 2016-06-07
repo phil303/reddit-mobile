@@ -1,0 +1,44 @@
+@import (reference) '~art-gallery/assets/less/variables';
+
+.Modal {
+  &__menubar {
+    height: 48px;
+    line-height: 50px;
+    text-align: center;
+  }
+
+  &__menubar-close {
+    position: absolute;
+    top: 15px;
+    left: 11px;
+  }
+
+  &__menubar-text {
+    font-size: 17px;
+    font-weight: 300;
+    color: @off-black;
+  }
+
+  &__menubar-action {
+    position: absolute;
+    display: inline-block;
+    top: 8px;
+    right: 8px;
+  }
+
+  &__menubar-button {
+    height: 30px;
+    width: 60px;
+    color: white;
+    background-color: @pale-grey;
+    border-radius: 2px;
+    line-height: 30px;
+
+    &.ready {
+      background-color: @blue;
+    }
+  }
+
+  &__body {
+  }
+}

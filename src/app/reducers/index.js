@@ -9,6 +9,7 @@ import compact from './compact';
 import hiddenRequests from './hiddenRequests';
 import loid from './loid';
 import postsLists from './postsLists';
+import recentSubreddits from './recentSubreddits';
 import replying from './replying';
 import savedRequests from './savedRequests';
 import searchRequests from './searchRequests';
@@ -32,6 +33,7 @@ export default {
   loid,
   postsLists,
   replying,
+  recentSubreddits,
   savedRequests,
   searchRequests,
   session,

@@ -11,6 +11,7 @@ import ToggleSubredditSubscriptionHandler from './handlers/ToggleSubredditSubscr
 import UserActivityHandler from './handlers/UserActivity';
 import UserProfilerHandler from './handlers/UserProfile';
 import Vote from './handlers/Vote';
+import { PostSubmitHandler, PostSubmitCommunityHandler } from './handlers/PostSubmit';
 
 export default [
   ['/', PostsFromSubredditHandler],
@@ -29,6 +30,8 @@ export default [
   ['/u/:userName/:savedOrHidden(saved|hidden)', SavedAndHiddenHandler],
   ['/u/:userName', UserProfilerHandler],
   ['/login', Login],
+  ['/submit', PostSubmitHandler],
+  ['/submit/to_community', PostSubmitCommunityHandler],
 
   // actions
   ['/vote/:thingId', Vote],

@@ -1,0 +1,70 @@
+@import (reference) '~art-gallery/assets/less/variables';
+
+.PostSubmitModal {
+  height: 40px;
+  color: @grey-text;
+  font-size: 16px;
+
+  &__community {
+    margin-top: 7px;
+  }
+
+  &__community-snoo-icon {
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: 12px;
+    margin-right: 8px;
+
+    border-radius: 50%;
+    background-color: @blue;
+    overflow: hidden;
+  }
+
+  &__community-snoo {
+    background: url('/img/snoo-32.png') 0 4px no-repeat;
+    width: 32px;
+    height: 32px;
+  }
+
+  &__community-text {
+    display: inline-block;
+    line-height: 32px;
+    vertical-align: middle;
+    color: @grey-text;
+
+    .icon {
+      margin-left: 6px;
+      margin-top: -4px;
+      display: inline-block;
+    }
+  }
+  
+
+  &__title {
+    margin: 25px 12px 0;
+  }
+
+  &__content {
+    margin: 25px 12px 0;
+  }
+
+  input:focus {
+    border-bottom: 1px solid @mint;
+  }
+
+  textarea {
+    resize: none;
+  }
+
+  input, textarea {
+    color: @semi-black-text;
+    padding: 10px;
+    width: 100%;
+    border-bottom: 1px solid @neutral;
+    border-radius: 0;   // handle ios safari's native border rounding
+
+    &:focus {
+      outline: none;
+    }
+  }
+}

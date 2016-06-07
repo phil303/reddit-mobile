@@ -1,0 +1,65 @@
+@import (reference) '~art-gallery/assets/less/variables';
+
+.PostSubmitCommunity {
+  &__search {
+    margin: 25px 16px 0;
+
+    .icon {
+      display: inline-block;
+      float: left;
+      font-size: 22px;
+      margin-top: 7px;
+    }
+  }
+
+  &__search-input {
+    overflow: hidden;
+
+    input {
+      padding: 10px;
+      width: 100%;
+
+      &:focus {
+        outline: none;
+      }
+    }
+  }
+
+  &__recents-title {
+    padding: 9px 16px;
+    border-bottom: 1px solid @neutral;
+    font-size: 12px;
+    color: @grey-text;
+  }
+
+  &__recents-list {
+    padding: 15px 13px;
+  }
+
+  &__recents-row {
+    margin-bottom: 8px;
+  }
+
+  // TODO: abstract out a component for snoos
+  &__recents-icon {
+    display: inline-block;
+    border-radius: 50%;
+    background-color: @blue;
+    overflow: hidden;
+    vertical-align: middle;
+  }
+
+  &__recents-icon-snoo {
+    background: url('/img/snoo-64.png') no-repeat;
+    background-size: 100%;
+    width: 32px;
+    height: 32px;
+  }
+
+  &__recents-name {
+    display: inline-block;
+    margin-left: 13px;
+    font-size: 16px;
+    color: @dark-grey;
+  }
+}

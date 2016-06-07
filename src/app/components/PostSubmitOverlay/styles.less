@@ -1,0 +1,43 @@
+@import (reference) '~art-gallery/assets/less/variables';
+
+.PostSubmitOverlay {
+  height: 108px;
+  background-color: white;
+  text-align: center;
+  position: relative;
+  // TODO: correct color
+  border-top: 1px solid @pale-grey;
+
+  &__icons {
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  &__icon {
+    display: inline-block;
+    width: 26%;
+
+    &:first-child {
+      margin-left: 11%;
+    }
+    &:last-child {
+      margin-right: 11%;
+    }
+  }
+
+  &__icon-text {
+    font-size: 10px;
+    font-weight: bold;
+    color: @grey-text;
+    margin-top: 2px;
+  }
+
+  .icon {
+    color: @blue;
+    height: 48px;
+    font-size: 48px;
+    position: relative;
+    top: 16px;
+  }
+}
