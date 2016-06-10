@@ -93,7 +93,8 @@ function setCompact(ctx, app) {
     return;
   }
 
-  let compact = (ctx.cookies.get('compact') || '').toString() === 'true';
+  // default to compact mode
+  let compact = (ctx.cookies.get('compact') || 'true').toString() === 'true';
 
   const cookieOptions = makeCookieOptions(app);
 
