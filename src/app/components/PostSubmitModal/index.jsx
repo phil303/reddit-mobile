@@ -8,7 +8,7 @@ import './styles.less';
 
 const T = React.PropTypes;
 
-const TITLE_PLACEHOLDER = 'Post an interesting title';
+const TITLE_PLACEHOLDER = 'Add an interesting title';
 const TITLE_TEXT = {
   text: 'Text',
   link: 'Link',

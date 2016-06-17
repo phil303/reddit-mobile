@@ -6,13 +6,14 @@
   font-size: 14px;
 
   &__community {
-    margin-top: 7px;
+    margin: 7px 12px 0;
+    padding-bottom: 7px;
+    border-bottom: 1px solid @neutral;
   }
 
   &__community-snoo-icon {
     display: inline-block;
     vertical-align: middle;
-    margin-left: 12px;
     margin-right: 8px;
 
     border-radius: 50%;
@@ -41,11 +42,11 @@
   
 
   &__title {
-    margin: 25px 12px 0;
+    margin: 0 12px;
   }
 
   &__content {
-    margin: 25px 12px 0;
+    margin: 0 12px;
   }
 
   input:focus {
@@ -58,7 +59,7 @@
 
   input, textarea {
     color: @semi-black-text;
-    padding: 10px;
+    padding: 14px;
     width: 100%;
     border-bottom: 1px solid @neutral;
     border-radius: 0;   // handle ios safari's native border rounding
