@@ -8,6 +8,7 @@ import commentsPages from './commentsPages';
 import compact from './compact';
 import hiddenRequests from './hiddenRequests';
 import loid from './loid';
+import posting from './posting';
 import postsLists from './postsLists';
 import recentSubreddits from './recentSubreddits';
 import replying from './replying';
@@ -31,6 +32,7 @@ export default {
   compact,
   hiddenRequests,
   loid,
+  posting,
   postsLists,
   replying,
   recentSubreddits,

@@ -6,6 +6,7 @@ import * as recentSubredditActions from '../actions/recentSubreddits';
 const DEFAULT = [];
 
 // TODO: tests
+// TODO: lowercase urls
 export default (state=DEFAULT, action={}) => {
   switch (action.type) {
     case recentSubredditActions.SET_RECENT_SUBREDDITS: {

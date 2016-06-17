@@ -3,7 +3,9 @@ import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import filter from 'lodash/filter';
 import { Anchor } from '@r/platform/components';
+import * as platformActions from '@r/platform/actions';
 
+import * as postingActions from '../../actions/posting';
 import Modal, { BUTTON } from '../Modal';
 import './styles.less';
 
@@ -70,4 +72,11 @@ const mapStateToProps = createSelector(
   },
 );
 
-export default connect(mapStateToProps)(PostSubmitCommunityModal);
+const dispatcher = dispatch => ({
+  onCommunityClick: communityName => {
+    dispatch(postingActions.selectCommunity(communityName));
+    dispatch(platformActions.setPage('/submit'));
+  },
+});
+
+export default connect(mapStateToProps, dispatcher)(PostSubmitCommunityModal);
