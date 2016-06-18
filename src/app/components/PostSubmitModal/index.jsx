@@ -8,6 +8,7 @@ import './styles.less';
 
 const T = React.PropTypes;
 
+const SELECT_COMMUNITY = 'Select a community';
 const TITLE_PLACEHOLDER = 'Add an interesting title';
 const TITLE_TEXT = {
   text: 'Text',
@@ -16,8 +17,8 @@ const TITLE_TEXT = {
 };
 
 class PostSubmitModal extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.handleTextAreaChange = this.handleTextAreaChange.bind(this);
   }
 
@@ -38,17 +39,7 @@ class PostSubmitModal extends React.Component {
       <Modal exitTo='/' titleText={ title } action={ BUTTON } buttonText='POST'>
         <div className='PostSubmitModal'>
 
-          <div className='PostSubmitModal__community'>
-            <div className='PostSubmitModal__community-snoo-icon'>
-              <div className='PostSubmitModal__community-snoo'></div>
-            </div>
-            <Anchor href='/submit/to_community'>
-              <div className='PostSubmitModal__community-text'>
-                Select a community
-                <div className='icon icon-nav-arrowdown'></div>
-              </div>
-            </Anchor>
-          </div>
+          { this.renderCommunityButton() }
 
           <div className='PostSubmitModal__title'>
             <input placeholder={ TITLE_PLACEHOLDER } />
@@ -100,6 +91,27 @@ class PostSubmitModal extends React.Component {
     );
   }
 
+  renderCommunityButton() {
+    const { community: { name, iconUrl } } = this.props;
+
+    const style = iconUrl ? { backgroundImage: `url(${iconUrl})` } : null;
+    const text = name ? name : SELECT_COMMUNITY;
+
+    return (
+      <div className='PostSubmitModal__community'>
+        <div className='PostSubmitModal__community-snoo-icon'>
+          <div className='PostSubmitModal__community-snoo' style={ style }></div>
+        </div>
+        <Anchor href='/submit/to_community'>
+          <div className='PostSubmitModal__community-text'>
+            { text }
+            { name ? null : <div className='icon icon-nav-arrowdown'></div> }
+          </div>
+        </Anchor>
+      </div>
+    );
+  }
+
   handleTextAreaChange(e) {
     const { target } = e.nativeEvent;
     const { scrollHeight } = target;
@@ -111,9 +123,15 @@ class PostSubmitModal extends React.Component {
 
 const mapStateToProps = createSelector(
   state => state.platform.currentPage,
-  pageParams => {
+  state => state.posting,
+  state => state.subreddits,
+  (pageParams, posting, subreddits) => {
     const { queryParams: { type: submissionType } } = pageParams;
-    return { submissionType };
+
+    const communityMetaData = subreddits[posting.community];
+    const iconUrl = communityMetaData ? communityMetaData.iconImage : null;
+
+    return { submissionType, community: { name: posting.community, iconUrl } };
   }
 );
 
