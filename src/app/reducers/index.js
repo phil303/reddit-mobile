@@ -3,6 +3,7 @@ import { models } from '@r/api-client';
 import { apiResponseReducerMaker } from './apiResponse';
 import accountRequests from './accountRequests';
 import activitiesRequests from './activitiesRequests';
+import autocompleteSubreddits from './autocompleteSubreddits';
 import collapsedComments from './collapsedComments';
 import commentsPages from './commentsPages';
 import compact from './compact';
@@ -27,6 +28,7 @@ const { COMMENT, POST, SUBREDDIT, ACCOUNT } = ModelTypes;
 export default {
   accountRequests,
   activitiesRequests,
+  autocompleteSubreddits,
   collapsedComments,
   commentsPages,
   compact,

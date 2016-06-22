@@ -6,6 +6,7 @@ import { Anchor } from '@r/platform/components';
 import * as platformActions from '@r/platform/actions';
 
 import * as postingActions from '../../actions/posting';
+import * as subredditAutocompleteActions from '../../actions/subredditAutocomplete';
 import Modal, { BUTTON } from '../Modal';
 import './styles.less';
 
@@ -15,32 +16,51 @@ const RECENTS_LIMIT = 7;
 class PostSubmitCommunityModal extends React.Component {
   constructor(props) {
     super(props);
+    this.onSubredditInput = e => props.onSubredditInput(e.target.value);
     this.renderSubredditRow = this.renderSubredditRow.bind(this);
   }
 
   render() {
-    const { recentSubreddits } = this.props;
+    const {
+      onSubredditInput,
+      onExitModal,
+      recentSubreddits,
+      autocompleteSubreddits
+    } = this.props;
+
     return (
-      <Modal exitTo='/submit' titleText='Post to a community'>
+      <Modal
+        exitTo='/submit'
+        onExit={ onExitModal }
+        titleText='Post to a community'
+      >
         <div className='PostSubmitCommunity'>
           <div className='PostSubmitCommunity__search'>
             <div className='icon icon-search'></div>
             <div className='PostSubmitCommunity__search-input'>
-              <input placeholder={ COMMUNITY_DEFAULT } />
+              <input
+                placeholder={ COMMUNITY_DEFAULT }
+                onChange={ this.onSubredditInput }
+              />
             </div>
           </div>
-          { recentSubreddits.length ?
-              this.renderRecentSubreddits(recentSubreddits) : null }
+
+          { autocompleteSubreddits.received ?
+              this.renderSubreddits('Communities', autocompleteSubreddits.results) :
+              recentSubreddits.length ?
+                this.renderSubreddits('Recently visited', recentSubreddits) :
+                null }
+
         </div>
       </Modal>
     );
   }
 
-  renderRecentSubreddits() {
+  renderSubreddits(title) {
     return (
       <div className='PostSubmitCommunity__recents'>
         <div className='PostSubmitCommunity__recents-title'>
-          Recently visited
+          { title }
         </div>
         <div className='PostSubmitCommunity__recents-list'>
           { this.props.recentSubreddits.map(this.renderSubredditRow) }
@@ -71,10 +91,12 @@ class PostSubmitCommunityModal extends React.Component {
 
 
 const mapStateToProps = createSelector(
+  state => state.autocompleteSubreddits,
   state => state.recentSubreddits.slice(0, RECENTS_LIMIT),
   state => state.subreddits,
-  (recentSubreddits, subreddits) => {
+  (autocompleteSubreddits, recentSubreddits, subreddits) => {
     return {
+      autocompleteSubreddits,
       recentSubreddits: recentSubreddits.map(subredditName => {
         const subredditMetaData = subreddits[subredditName];
         const iconUrl = subredditMetaData ? subredditMetaData.iconImage : null;
@@ -89,6 +111,8 @@ const dispatcher = dispatch => ({
     dispatch(postingActions.selectCommunity(communityName));
     dispatch(platformActions.setPage('/submit'));
   },
+  onSubredditInput: val => dispatch(subredditAutocompleteActions.fetch(val)),
+  onExitModal: () => dispatch(subredditAutocompleteActions.resetAutocomplete()),
 });
 
 export default connect(mapStateToProps, dispatcher)(PostSubmitCommunityModal);
