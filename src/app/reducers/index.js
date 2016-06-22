@@ -11,6 +11,7 @@ import commentsPages from './commentsPages';
 import compact from './compact';
 import editingComment from './editingComment';
 import expandedPosts from './expandedPosts';
+import config from './config';
 import hiddenRequests from './hiddenRequests';
 import loid from './loid';
 import mail from './mail';
@@ -48,6 +49,7 @@ export default {
   comments,
   commentsPages,
   compact,
+  config,
   expandedPosts,
   editingComment,
   hiddenRequests,

@@ -26,6 +26,7 @@ import { dispatchInitialMeta } from 'server/initialState/dispatchInitialMeta';
 import { dispatchInitialOver18 } from 'server/initialState/dispatchInitialOver18';
 import { dispatchInitialTheme } from 'server/initialState/dispatchInitialTheme';
 import { dispatchInitialRecentSubreddits } from 'server/initialState/dispatchInitialRecentSubreddits';
+import { dispatchInitialConfig } from 'server/initialState/dispatchInitialConfig';
 import metaRoutes from 'server/meta';
 
 import dispatchInitialCollapsedComments from
@@ -84,6 +85,7 @@ export function startServer() {
     reducers,
     reduxMiddleware,
     dispatchBeforeNavigation: async (ctx, dispatch/*, getState, utils*/) => {
+      dispatchInitialConfig(process.env, dispatch);
       dispatchInitialMeta(ctx, dispatch);
       dispatchInitialShell(ctx, dispatch);
       dispatchInitialLoid(ctx, dispatch);
