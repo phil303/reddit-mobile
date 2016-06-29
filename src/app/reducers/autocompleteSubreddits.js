@@ -1,5 +1,5 @@
 import merge from '@r/platform/merge';
-import * as subredditAutocompleteActions from '../actions/subredditAutocomplete';
+import * as subredditAutocompleteActions from 'app/actions/subredditAutocomplete';
 
 const DEFAULT = {
   fetching: false,

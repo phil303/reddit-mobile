@@ -5,9 +5,9 @@ import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import { Anchor, Form } from '@r/platform/components';
 
-import cx from '../../../lib/classNames';
+import cx from 'lib/classNames';
 import Modal from '../Modal';
-import * as postingActions from '../../actions/posting';
+import * as postingActions from 'app/actions/posting';
 import './styles.less';
 
 const T = React.PropTypes;

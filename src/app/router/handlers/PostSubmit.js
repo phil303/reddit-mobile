@@ -1,6 +1,6 @@
 import { BaseHandler, METHODS } from '@r/platform/router';
 import * as platformActions from '@r/platform/actions';
-import * as subredditActions from '../../actions/subreddits';
+import * as subredditActions from 'app/actions/subreddits';
 
 export class PostSubmitHandler extends BaseHandler {
   async [METHODS.GET](dispatch, getState) {

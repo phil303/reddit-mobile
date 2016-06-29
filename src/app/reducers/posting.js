@@ -1,7 +1,7 @@
 import merge from '@r/platform/merge';
 
 import * as loginActions from 'app/actions/login';
-import * as postingActions from '../actions/posting';
+import * as postingActions from 'app/actions/posting';
 
 const DEFAULT = {
   subreddit: '',

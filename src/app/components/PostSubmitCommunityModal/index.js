@@ -3,8 +3,8 @@ import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import * as platformActions from '@r/platform/actions';
 
-import * as postingActions from '../../actions/posting';
-import * as subredditAutocompleteActions from '../../actions/subredditAutocomplete';
+import * as postingActions from 'app/actions/posting';
+import * as subredditAutocompleteActions from 'app/actions/subredditAutocomplete';
 import Modal from '../Modal';
 import './styles.less';
 

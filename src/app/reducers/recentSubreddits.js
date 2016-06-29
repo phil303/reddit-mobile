@@ -1,6 +1,6 @@
 import * as platformActions from '@r/platform/actions';
 
-import * as recentSubredditActions from '../actions/recentSubreddits';
+import * as recentSubredditActions from 'app/actions/recentSubreddits';
 
 const DEFAULT = [];
 
