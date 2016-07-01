@@ -1,13 +1,17 @@
 import * as platformActions from '@r/platform/actions';
 
+import * as loginActions from 'app/actions/login';
 import * as recentSubredditActions from 'app/actions/recentSubreddits';
 
 const DEFAULT = [];
 
-// TODO: tests
-// TODO: lowercase urls
 export default (state=DEFAULT, action={}) => {
   switch (action.type) {
+    case loginActions.LOGGED_IN:
+    case loginActions.LOGGED_OUT: {
+      return DEFAULT;
+    }
+
     case recentSubredditActions.SET_RECENT_SUBREDDITS: {
       return action.subreddits;
     }
