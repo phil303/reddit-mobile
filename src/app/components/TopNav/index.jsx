@@ -112,4 +112,4 @@ const mapDispatchToProps = (dispatch) => ({
   openSearch: () => dispatch(searchActions.openSearch()),
 });
 
-export default connect(mapStateToProps)(TopNav);
+export default connect(mapStateToProps, mapDispatchToProps)(TopNav);
