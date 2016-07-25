@@ -22,7 +22,6 @@ import dispatchSession from 'server/session/dispatchSession';
 import { dispatchInitialCompact } from 'server/initialState/dispatchInitialCompact';
 import { dispatchInitialMeta } from 'server/initialState/dispatchInitialMeta';
 import { dispatchInitialLoid } from 'server/initialState/dispatchInitialLoid';
-import { dispatchInitialMeta } from 'server/initialState/dispatchInitialMeta';
 import { dispatchInitialOver18 } from 'server/initialState/dispatchInitialOver18';
 import { dispatchInitialTheme } from 'server/initialState/dispatchInitialTheme';
 import { dispatchInitialRecentSubreddits } from 'server/initialState/dispatchInitialRecentSubreddits';
