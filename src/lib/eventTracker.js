@@ -6,7 +6,7 @@ import { objectToHash } from 'lib/objectToHash';
 
 import { DEFAULT_API_TIMEOUT } from 'app/constants';
 
-function calculateHash (key, string) {
+function calculateHash(key, string) {
   const hmac = crypto.createHmac('sha256', key);
   hmac.setEncoding('hex');
   hmac.write(string);
