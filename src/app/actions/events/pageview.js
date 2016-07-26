@@ -2,7 +2,7 @@ import { parseRoute } from '@r/platform/navigationMiddleware';
 
 import { getEventTracker } from 'lib/eventTracker';
 
-import { NIGHTMODE } from 'app/actions/theme';
+import { themes } from 'app/constants';
 import routes from 'app/router';
 
 import { NAME as Comments } from 'app/router/handlers/CommentsPage';
@@ -22,6 +22,8 @@ import {
   //getCurrentUserFromState,
   //getThingFromStateById,
 } from './utils';
+
+const { NIGHTMODE } = themes;
 
 const LINK_LIMIT = 25;
 

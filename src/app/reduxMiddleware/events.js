@@ -6,7 +6,7 @@ import * as search from 'app/actions/search';
 import * as searchEvent from 'app/actions/events/search';
 import * as login from 'app/actions/login';
 import * as loginEvent from 'app/actions/events/login';
-import * as comment from 'app/actions/comment';
+import * as reply from 'app/actions/reply';
 import * as commentEvent from 'app/actions/events/comment';
 //import * as registerEvent from 'app/actions/events/register';
 //import * as submitEvent from 'app/actions/events/submit';
@@ -14,12 +14,12 @@ import * as commentEvent from 'app/actions/events/comment';
 const actionEventMap = {
   [platform.SET_PAGE]: pageviewEvent.pageview,
   [search.OPEN_SEARCH]: searchEvent.opened,
-  [search.SEARCHED]: searchEvent.executed,
   [search.CLOSE_SEARCH]: searchEvent.cancelled,
-  [search.FETCHING_SEARCH_REQUEST]: searchEvent.search,
+  [search.RECEIVED_SEARCH_REQUEST]: searchEvent.executed,
   [login.LOGGED_IN]: loginEvent.login,
-  [comment.REPLIED]: commentEvent.reply,
-  //[register.REGISTERED]: registerEvent.register,
+  [reply.REPLIED]: commentEvent.reply,
+  // [search.FETCHING_SEARCH_REQUEST]: searchEvent.search,
+  // [register.REGISTERED]: registerEvent.register,
   // submit post
 };
 

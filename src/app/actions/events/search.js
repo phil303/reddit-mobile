@@ -35,7 +35,7 @@ export function buildSearchData(state, params, response) {
 export const EVENT__SEARCH_EXECUTED = 'EVENT__SEARCH_EXECUTED';
 export const executed = (params, response) =>
   async (dispatch, getState, { waitForState }) => {
-    return await waitForState((state) => (dataRequiredForHandler(state, Search)), () => {
+    return await waitForState(state => dataRequiredForHandler(state, Search), () => {
       const state = getState();
       const data = buildSearchData(state, params, response);
       data.type = SEARCH_EXECUTED;
