@@ -263,7 +263,7 @@ export const pageview = () => async (dispatch, getState, { waitForState }) => {
   const { handler } = parseRoute(currentPage.url, routes);
   const handlerName = handler.name;
 
-  return await waitForState((state) => (dataRequiredForHandler(state, handlerName)), (state) => {
+  return await waitForState(state => dataRequiredForHandler(state, handlerName), state => {
     const data = buildPageviewData(state, handlerName);
     getEventTracker(state).track('screenview_events', 'cs.screenview', data);
   });
