@@ -5,10 +5,9 @@ import { getEventTracker } from 'lib/eventTracker';
 import { themes } from 'app/constants';
 import routes from 'app/router';
 
-import { NAME as Comments } from 'app/router/handlers/CommentsPage';
-import { NAME as Posts } from 'app/router/handlers/PostsFromSubreddit';
+import CommentsPage from 'app/router/handlers/CommentsPage';
 import PostsFromSubreddit from 'app/router/handlers/PostsFromSubreddit';
-import { NAME as Search} from 'app/router/handlers/SearchPage';
+import SearchPage from 'app/router/handlers/SearchPage';
 import { searchRequestSelector } from 'app/pages/SearchPage';
 import { paramsToPostsListsId } from 'app/models/PostsList';
 
@@ -16,8 +15,6 @@ import {
   getBasePayload,
   convertId,
   getCurrentSubredditFromState,
-  getCurrentUrlParamsFromState,
-  getCurrentQueryParamsFromState,
   //getCurrentPostFromState,
   //getCurrentUserFromState,
   //getThingFromStateById,
@@ -28,8 +25,8 @@ const { NIGHTMODE } = themes;
 const LINK_LIMIT = 25;
 
 // update with user activity once we have it
-const INCLUDE_SORT_ORDER = [Comments, Posts, Search];
-const SORT_TYPE_CONFIDENCE = [Comments];
+const INCLUDE_SORT_ORDER = [CommentsPage, PostsFromSubreddit, SearchPage];
+const SORT_TYPE_CONFIDENCE = [CommentsPage];
 
 export const buildSortOrderData = (state, handlerName) => {
   const { currentPage } = state.platform;
@@ -111,17 +108,17 @@ export const buildNightModeData = (state) => {
 
 export const buildTargetData = (state, handlerName) => {
   switch (handlerName) {
-    case Comments: {
+    case CommentsPage: {
       // target_id
       // target_fullname
       return {
         target_type: 'comment',
       };
     }
-    case Search: {
+    case SearchPage: {
       return {};
     }
-    case Posts: {
+    case PostsFromSubreddit: {
       const subreddit = getCurrentSubredditFromState(state);
       const target_id = convertId(subreddit.id);
       return {
@@ -199,24 +196,24 @@ export const buildTargetData = (state, handlerName) => {
 };
 
 export const dataRequiredForHandler = (state, handlerName) => {
-  if (!waitForUser(state)) { return; }
+  if (!waitForUser(state)) { return true; }
 
   switch (handlerName) {
-    case Comments: {
+    case CommentsPage.name: {
       return true;
       // subredditRequests and posts and comments
       // return state.commentsPages && state.subredditRequests && state.posts;
     }
-    case Search: {
+    case SearchPage.name: {
       const request = searchRequestSelector(state);
       return request && !request.loading;
     }
-    case Posts: {
+    case PostsFromSubreddit.name: {
       const subreddit = getCurrentSubredditFromState(state);
       // const subredditRequest = subreddit ? state.subredditRequests[subreddit.uuid] : null;
 
-      const urlParams = getCurrentUrlParamsFromState(state);
-      const queryParams = getCurrentQueryParamsFromState(state);
+      const { urlParams } = state.platform.currentPage;
+      const { queryParams } = state.platform.currentPage;
       const postsParams = PostsFromSubreddit.pageParamsToSubredditPostsParams({
         urlParams,
         queryParams,
@@ -265,7 +262,7 @@ export const pageview = () => async (dispatch, getState, { waitForState }) => {
   const { handler } = parseRoute(currentPage.url, routes);
   const handlerName = handler.name;
 
-  return await waitForState(state => dataRequiredForHandler(state, handlerName), state => {
+  waitForState(state => dataRequiredForHandler(state, handlerName), state => {
     const data = buildPageviewData(state, handlerName);
     getEventTracker(state).track('screenview_events', 'cs.screenview', data);
   });

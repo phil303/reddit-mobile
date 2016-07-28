@@ -35,23 +35,15 @@ export function getBasePayload(state) {
   return payload;
 }
 
-export function getCurrentUrlParamsFromState (state) {
-  return state.platform.currentPage.urlParams;
-}
-
-export function getCurrentQueryParamsFromState (state) {
-  return state.platform.currentPage.queryParams;
-}
-
-export function getCurrentSubredditFromState (state) {
-  const { subredditName } = getCurrentUrlParamsFromState(state);
+export function getCurrentSubredditFromState(state) {
+  const { subredditName } = state.platform.currentPage.urlParams;
   if (!subredditName) { return; }
 
   return state.subreddits[subredditName.toLowerCase()];
 }
 
 export function getCurrentPostFromState (state) {
-  const { postId } = getCurrentUrlParamsFromState(state);
+  const { postId } = state.platform.currentPage.urlParams;
   if (!postId) { return; }
 
   return state.posts[`t3_${postId}`];
