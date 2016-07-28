@@ -23,13 +23,11 @@ export function formatResponse(response) {
 }
 
 export function buildSearchData(state, params, response) {
-  const payload = {
+  return {
     ...buildPageviewData(state, Search),
     ...formatParams(params),
     ...formatResponse(response),
   };
-
-  return payload;
 }
 
 export const EVENT__SEARCH_EXECUTED = 'EVENT__SEARCH_EXECUTED';
