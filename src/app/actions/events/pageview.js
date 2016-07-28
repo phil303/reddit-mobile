@@ -209,11 +209,9 @@ export const dataRequiredForHandler = (state, handlerName) => {
       return request && !request.loading;
     }
     case PostsFromSubreddit.name: {
-      const subreddit = getCurrentSubredditFromState(state);
-      // const subredditRequest = subreddit ? state.subredditRequests[subreddit.uuid] : null;
+      const { currentPage: { url, urlParams, queryParams } } = state.platform;
+      const onSubredditPage = !!urlParams.subredditName || url === '/'
 
-      const { urlParams } = state.platform.currentPage;
-      const { queryParams } = state.platform.currentPage;
       const postsParams = PostsFromSubreddit.pageParamsToSubredditPostsParams({
         urlParams,
         queryParams,
@@ -223,11 +221,7 @@ export const dataRequiredForHandler = (state, handlerName) => {
 
       // XXX We only need to wait for the list of posts if we plan to include
       // the link_listing payload field.
-      return !!(
-        subreddit &&
-        postsList &&
-        !postsList.loading
-      );
+      return onSubredditPage && postsList && !postsList.loading;
     }
     default: {
       return true;
@@ -236,7 +230,7 @@ export const dataRequiredForHandler = (state, handlerName) => {
 };
 
 export const buildPageviewData = (state, handlerName) => {
-  const data = {
+  return {
     ...getBasePayload(state),
     ...buildSortOrderData(state, handlerName),
     ...buildSubredditData(state),
@@ -245,8 +239,6 @@ export const buildPageviewData = (state, handlerName) => {
     ...buildCompactViewData(state),
     ...buildTargetData(state, handlerName),
   };
-
-  return data;
 };
 
 export const waitForUser = (state) => {
