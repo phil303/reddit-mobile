@@ -186,10 +186,18 @@ export const dataRequiredForHandler = (state, handlerName) => {
 
   switch (handlerName) {
     case CommentsPage.name: {
-      return true;
-      // TODO
-      // subredditRequests and posts and comments
-      // return state.commentsPages && state.subredditRequests && state.posts;
+      const { current } = state.commentsPages;
+      const { currentPage: { urlParams, queryParams } } = state.platform;
+
+      const postsParams = PostsFromSubreddit.pageParamsToSubredditPostsParams({
+        urlParams,
+        queryParams,
+      });
+
+      const haveSubredditData = !!state.subreddits[postsParams.subredditName];
+
+      // TODO: wait for comments page data to load in order to fill in target data?
+      return userLoaded && haveSubredditData && !state.commentsPages[current].loading;
     }
 
     case SearchPage.name: {
