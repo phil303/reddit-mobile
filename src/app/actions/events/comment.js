@@ -37,7 +37,6 @@ export const reply = ({ model }) => async (dispatch, getState, { waitForState })
   return await waitForState(state => state.user.name && state.accounts[state.user.name], () => {
     const state = getState();
     const data = buildCommentData(state, model);
-    console.log('COMMENT REPLY', data);
     getEventTracker(state).track('comment_events', 'cs.comment', data);
   });
 };

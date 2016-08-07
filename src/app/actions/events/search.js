@@ -11,7 +11,6 @@ const SEARCH_CANCELLED = 'search_cancelled';
 const SEARCH_OPENED = 'search_opened';
 
 export function formatParams(params) {
-  console.log(params);
   if (!params) { return {}; }
 
   return params.searchParams;
@@ -37,7 +36,6 @@ export const executed = (params, response) =>
       const state = getState();
       const data = buildSearchData(state, params, response);
       data.type = SEARCH_EXECUTED;
-      console.log('SEARCH_EXECUTED', data);
       getEventTracker(state).track('search_events', 'search_executed', data);
     });
   };
@@ -49,7 +47,6 @@ export const cancelled = () =>
     await waitForValidSession(state, waitForState, newState => {
       const data = buildSearchData(newState);
       data.type = SEARCH_CANCELLED;
-      console.log(data);
       getEventTracker(newState).track('search_events', 'search_cancelled', data);
     });
   };
@@ -61,7 +58,6 @@ export const opened = () =>
     await waitForValidSession(state, waitForState, newState => {
       const data = buildSearchData(newState);
       data.type = SEARCH_OPENED;
-      console.log(data);
       getEventTracker(newState).track('search_events', 'search_opened', data);
     });
   };

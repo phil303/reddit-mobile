@@ -25,7 +25,6 @@ export const login = () => async (dispatch, getState, { waitForState }) => {
   return await waitForState(state => state.user.name && state.accounts[state.user.name], () => {
     state = getState();
     const data = buildLoginData(state);
-    console.log('LOGIN', data);
     getEventTracker(state).track('login_events', 'cs.login_attempt', data);
   });
 };
