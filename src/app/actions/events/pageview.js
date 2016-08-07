@@ -177,33 +177,41 @@ export const buildTargetData = (state, handlerName) => {
 };
 
 export const dataRequiredForHandler = (state, handlerName) => {
-  if (!waitForUser(state)) { return true; }
+
+  // if session is valid, wait for user to load to track, otherwise don't
+  let userLoaded = true;
+  if (state.session.isValid) {
+    userLoaded = !state.user.loggedOut && !state.user.loading;
+  }
 
   switch (handlerName) {
     case CommentsPage.name: {
       return true;
+      // TODO
       // subredditRequests and posts and comments
       // return state.commentsPages && state.subredditRequests && state.posts;
     }
+
     case SearchPage.name: {
       const request = searchRequestSelector(state);
-      return request && !request.loading;
+      return userLoaded && request && !request.loading;
     }
+
     case PostsFromSubreddit.name: {
-      const { currentPage: { url, urlParams, queryParams } } = state.platform;
-      const onSubredditPage = !!urlParams.subredditName || url === '/'
+      const { currentPage: { urlParams, queryParams } } = state.platform;
 
       const postsParams = PostsFromSubreddit.pageParamsToSubredditPostsParams({
         urlParams,
         queryParams,
       });
+
       const postsListId = paramsToPostsListsId(postsParams);
       const postsList = state.postsLists[postsListId];
+      const haveSubredditData = !!state.subreddits[postsParams.subredditName];
 
-      // TODO We only need to wait for the list of posts if we plan to include
-      // the link_listing payload field.
-      return onSubredditPage && postsList && !postsList.loading;
+      return userLoaded && haveSubredditData && postsList && !postsList.loading;
     }
+
     default: {
       return true;
     }
@@ -222,10 +230,6 @@ export const buildPageviewData = (state, handlerName) => {
   };
 };
 
-export const waitForUser = (state) => {
-  if (!state.session.isValid) { return true; }
-  return state.user.name && state.accounts[state.user.name];
-};
 
 export const EVENT__PAGEVIEW = 'EVENT__PAGEVIEW';
 export const pageview = () => async (dispatch, getState, { waitForState }) => {
