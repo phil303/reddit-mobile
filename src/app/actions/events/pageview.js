@@ -86,25 +86,6 @@ export const buildSubredditData = (state) => {
   return {};
 };
 
-export const buildLanguageData = () => {
-  return { language: 'en' };
-};
-
-export const buildDNTData = () => {
-  return { dnt: !!window.DO_NOT_TRACK };
-};
-
-export const buildCompactViewData = (state) => {
-  return { compact_view: state.compact };
-};
-
-export const buildNightModeData = (state) => {
-  if (state.theme === NIGHTMODE) {
-    return { nightmode: true };
-  }
-
-  return {};
-};
 
 export const buildTargetData = (state, handlerName) => {
   switch (handlerName) {
@@ -219,7 +200,7 @@ export const dataRequiredForHandler = (state, handlerName) => {
       const postsListId = paramsToPostsListsId(postsParams);
       const postsList = state.postsLists[postsListId];
 
-      // XXX We only need to wait for the list of posts if we plan to include
+      // TODO We only need to wait for the list of posts if we plan to include
       // the link_listing payload field.
       return onSubredditPage && postsList && !postsList.loading;
     }
@@ -231,12 +212,12 @@ export const dataRequiredForHandler = (state, handlerName) => {
 
 export const buildPageviewData = (state, handlerName) => {
   return {
+    language: 'en',     // TODO: how to set this?
+    dnt: !!window.DO_NOT_TRACK,
+    compact_view: state.compact,
     ...getBasePayload(state),
     ...buildSortOrderData(state, handlerName),
     ...buildSubredditData(state),
-    ...buildLanguageData(state),
-    ...buildDNTData(state),
-    ...buildCompactViewData(state),
     ...buildTargetData(state, handlerName),
   };
 };
