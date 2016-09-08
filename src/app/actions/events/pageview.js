@@ -215,6 +215,9 @@ export const pageview = () => async (dispatch, getState, { stateBecomes }) => {
   const { currentPage } = currentState.platform;
   const { handler } = matchRoute(currentPage.url, routes);
 
+  // @schwers
+  serverHang
+
   // try {
     // await stateBecomes(handler.isPageViewReady, handler.didPageViewFail)
     // getEventTracker()
