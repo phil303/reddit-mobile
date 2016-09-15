@@ -8,16 +8,18 @@ import localStorageAvailable from 'lib/localStorageAvailable';
 const reddit = process.env.REDDIT || 'https://www.reddit.com';
 
 // NOTE: It's very important that this is the root domain and not any
-// subdomain. Used for setting cookies, could cause issues like
-// losing authentication or infinite redirect loops if it doesn't work.
-const redditDomainParts = reddit
-  .match(/^https?:\/\/([^\/]+)/)[1]
-  .split('.');
-
-// Get the last two parts if the domain has multiple subdmaoins
-const rootReddit = redditDomainParts.length < 2
-  ? redditDomainParts.join('.')
-  : redditDomainParts.splice(redditDomainParts.length - 2, 2).join('.');
+// subdomain. Used for setting cookies, could cause issues like losing
+// authentication or infinite redirect loops if it doesn't work.
+//
+// This regex pulls out the domain for many different types of urls
+// For instance, the following urls have a root domain of 'reddit.com'
+//   - https://reddit.com
+//   - https://www.reddit.com
+//   - https://www.staging.reddit.com
+//
+// This also allows you to set process.env.REDDIT to a localhost type url
+const rootDomain = reddit.match(/^.*:\/\/(.*\.)?(.+\.\w*[^\/])/);
+const rootReddit = rootDomain ? rootDomain[2] : reddit;
 
 const config = () => ({
   https: process.env.HTTPS === 'true',
