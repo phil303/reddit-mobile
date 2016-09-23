@@ -1,6 +1,8 @@
+/* eslint-disable no-return-assign */
 import './styles.less';
 
 import React from 'react';
+import { Motion, spring } from 'react-motion';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import { models } from '@r/api-client';
@@ -22,62 +24,124 @@ const LOAD_MORE_COMMENTS = 'More Comments';
 const LOADING_MORE_COMMENTS = 'Loading...';
 const NESTING_STOP_LEVEL = 6;
 
-export function Comment(props) {
-  const {
-    comment,
-    commentCollapsed,
-    authorType,
-    nestingLevel,
-    preview,
-    isTopLevel,
-    isUserActivityPage,
-    highlightedComment,
-    onToggleCollapse,
-  } = props;
+const COLLAPSE_ANIMATION = { stiffness: 500, damping: 40 };
+const FADE_ANIMATION = { stiffness: 200, damping: 40 };
 
-  const commentClasses = cx('Comment', { 'in-comment-tree': !preview });
-  const bodyClasses = cx('Comment__body', {
-    'm-hidden': commentCollapsed && !isUserActivityPage,
-  });
+class Comment extends React.Component {
+  componentWillMount() {
+    // Set initial collapse state for the component
+    this.currentlyCollapsed = this.props.commentCollapsed;
+    this.shouldAnimate = false;
+  }
 
-  return (
-    <div className={ commentClasses }>
-      <div className='Comment__header' id={ comment.id }>
-        <CommentHeader
-          id={ comment.id }
-          author={ comment.author }
-          authorType={ authorType }
-          topLevel={ isTopLevel }
-          dots={ Math.max(nestingLevel - NESTING_STOP_LEVEL, 0) }
-          flair={ comment.authorFlairText }
-          created={ comment.createdUTC }
-          gildCount={ comment.gilded }
-          collapsed={ commentCollapsed }
-          highlight={ comment.id === highlightedComment }
-          stickied={ comment.stickied }
-          onToggleCollapse={ onToggleCollapse }
-        />
+  componentWillUpdate(nextProps) {
+    // Before this starts animating, measure its current height since it could
+    // have changed (via children expanding/collapsing or other means)
+    this.commentBaseHeight = this.commentBase.getBoundingClientRect().height;
+
+    // Detect when the user has asked the comments to collapse or expand
+    this.shouldAnimate = this.currentlyCollapsed !== nextProps.commentCollapsed;
+    if (this.shouldAnimate) {
+      this.currentlyCollapsed = nextProps.commentCollapsed;
+    }
+  }
+
+  render() {
+    const {
+      comment,
+      authorType,
+      nestingLevel,
+      isTopLevel,
+      preview,
+      commentCollapsed,
+      highlightedComment,
+      onToggleCollapse,
+    } = this.props;
+
+    const commentClasses = cx('Comment', { 'in-comment-tree': !preview });
+
+    return (
+      <div className={ commentClasses }>
+        <div className='Comment__header' id={ comment.id }>
+          <CommentHeader
+            id={ comment.id }
+            author={ comment.author }
+            authorType={ authorType }
+            topLevel={ isTopLevel }
+            dots={ Math.max(nestingLevel - NESTING_STOP_LEVEL, 0) }
+            flair={ comment.authorFlairText }
+            created={ comment.createdUTC }
+            gildCount={ comment.gilded }
+            collapsed={ commentCollapsed }
+            highlight={ comment.id === highlightedComment }
+            stickied={ comment.stickied }
+            onToggleCollapse={ onToggleCollapse }
+          />
+        </div>
+        { this.renderCommentBase() }
       </div>
+    );
+  }
 
-      <RedditLinkHijacker>
-        <div
-          className={ bodyClasses }
-          dangerouslySetInnerHTML={ { __html: mobilify(props.comment.bodyHTML) } }
-        />
-      </RedditLinkHijacker>
+  renderCommentBase() {
+    const { commentCollapsed } = this.props;
 
-      { !isUserActivityPage ? renderFooter(props) : null }
-    </div>
-  );
+    if (this.shouldAnimate) {
+      const startHeight = commentCollapsed ? this.commentBaseHeight : 0;
+      const startOpacity = commentCollapsed ? 1 : 0;
+
+      const endHeight = commentCollapsed ? 0 : this.commentBaseHeight;
+      const endOpacity = commentCollapsed ? 0 : 1;
+
+      const startStyle = { height: startHeight, opacity: startOpacity };
+      const interpolateTo = {
+        opacity: spring(endOpacity, FADE_ANIMATION),
+        height: spring(endHeight, COLLAPSE_ANIMATION),
+      };
+
+      return (
+        <Motion defaultStyle={ startStyle } style={ interpolateTo }>
+          { style => this._renderCommentBase(style) }
+        </Motion>
+      );
+    }
+
+    // Generally render without React-Motion
+    const style = { height: commentCollapsed ? 0 : this.commentBaseHeight };
+    return this._renderCommentBase(style);
+  }
+
+  _renderCommentBase(_style) {
+    // Use the height if it's measured and not equal to the total height of
+    // the comments. If it's equal to the total height, (which means the
+    // animation has finished, use `auto` so any new height changes are
+    // naturally accounted for.
+    const { height } = _style;
+    const shouldUseHeight = height !== null && height !== this.commentBaseHeight;
+    const style = shouldUseHeight ? _style : { ..._style, height: 'auto' };
+
+    return (
+      <div style={ style } className='Comment__base-mask'>
+        <div className='Comment__base' ref={ comp => this.commentBase = comp }>
+          <RedditLinkHijacker>
+            <div
+              className='Comment__body'
+              dangerouslySetInnerHTML={ { __html: mobilify(this.props.comment.bodyHTML) } }
+            />
+          </RedditLinkHijacker>
+
+          { !this.props.isUserActivityPage ? renderFooter(this.props) : null }
+        </div>
+      </div>
+    );
+  }
 }
-
 
 function renderFooter(props) {
   const {
     commentDeleted,
     commentReplying,
     commentingDisabled,
-    commentCollapsed,
     comment,
     preview,
   } = props;
@@ -85,7 +149,7 @@ function renderFooter(props) {
   return [
     !commentDeleted ? renderTools(props) : null,
     !preview && commentReplying && !commentingDisabled ? renderCommentReply(props) : null,
-    !preview && !commentCollapsed && comment.replies.length ? renderReplies(props) : null,
+    !preview && comment.replies.length ? renderReplies(props) : null,
   ];
 }
 
@@ -94,7 +158,6 @@ function renderTools(props) {
   const {
     user,
     comment,
-    commentCollapsed,
     currentPage,
     commentReplying,
     onToggleEditForm,
@@ -104,12 +167,8 @@ function renderTools(props) {
     votingDisabled,
   } = props;
 
-  const className = cx('Comment__toolsContainer', 'clearfix', {
-    'm-hidden': commentCollapsed,
-  });
-
   return (
-    <div className={ className }>
+    <div className='Comment__toolsContainer clearfix'>
       <div className='Comment__tools'>
         <CommentTools
           id={ comment.name }
@@ -147,10 +206,9 @@ function renderCommentReply(props) {
 
 
 function renderReplies(props) {
-  const { op, nestingLevel, comment, commentCollapsed } = props;
+  const { op, nestingLevel, comment } = props;
 
   const className = cx('Comment__replies', {
-    'm-hidden': commentCollapsed,
     'm-no-indent': nestingLevel >= NESTING_STOP_LEVEL,
   });
 
