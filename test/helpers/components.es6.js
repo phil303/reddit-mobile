@@ -71,7 +71,6 @@ export {
     CaptchaBox,
     Comment,
     CommentPreview,
-    Comment,
     CommunityHeader,
     CommunityOverlayMenu,
     CommunitySearchRow,

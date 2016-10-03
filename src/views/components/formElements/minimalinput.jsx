@@ -4,7 +4,7 @@ const T = React.PropTypes;
 
 function Input(props) {
   const { showTopBorder, name, type, placeholder,
-          onChange, error, children, value } = props;
+          onChange, error, children, value, autocomplete } = props;
   const showTop = showTopBorder ? 'show-top' : '';
 
   let errorClass = '';
@@ -27,6 +27,7 @@ function Input(props) {
           value={ value }
           className={ `minimalInput__input ${showTop} ${errorClass}` }
           placeholder={ placeholder }
+          autoComplete={ autocomplete }
           onChange={ onChange }
         />
         { children }
@@ -44,11 +45,13 @@ Input.propTypes = {
   name: T.string.isRequired,
   type: T.string,
   placeholder: T.string.isRequired,
+  autocomplete: T.string,
 };
 
 Input.defaultProps = {
   type: 'text',
   showTopBorder: false,
+  autocomplete: null,
 };
 
 export default Input;

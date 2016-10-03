@@ -484,6 +484,7 @@ class LoginPage extends BasePage {
             error={ error.password ? errorMessage : '' }
             onChange={ this.updatePassword }
             value={ password }
+            autocomplete='off'
           >
             { error.password ? this.renderClear('clearPassword') :
                                this.renderEye(blue, this.toggleType) }

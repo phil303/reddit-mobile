@@ -1015,4 +1015,3 @@ function routes(app) {
 }
 
 export default routes;
-export { buildProps };
