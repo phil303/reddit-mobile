@@ -23,8 +23,10 @@ export default function (state=DEFAULT, action={}) {
     }
 
     case replyActions.TOGGLE: {
-      if (state[action.id]) {
-        return merge(state, { [action.id]: { isShowing: false } });
+      if (state[action.id] && state[action.id].isShowing) {
+        return merge(state, {
+          [action.id]: { isShowing: false, content: action.content }
+        });
       }
 
       return merge(state, { [action.id]: { isShowing: true } });

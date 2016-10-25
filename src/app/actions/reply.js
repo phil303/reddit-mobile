@@ -13,7 +13,7 @@ export const PENDING = 'REPLY__PENDING';
 export const SUCCESS = 'REPLY__SUCCESS';
 export const FAILURE = 'REPLY__FAILURE';
 
-export const toggle = id => ({ type: TOGGLE, id });
+export const toggle = (id, content) => ({ type: TOGGLE, id, content });
 export const pending = (id, content) => ({ type: PENDING, id, content });
 export const success = (id, reply) => ({
   id,

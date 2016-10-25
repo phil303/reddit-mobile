@@ -66,7 +66,8 @@ const stateProps = createSelector(
       : commentsPage.results;
     const post = posts[commentsPageParams.id];
     const postLoaded = !!post;
-    const isReplying = !!replying[commentsPageParams.id];
+    const replyingState = replying[commentsPageParams.id];
+    const isReplying = replyingState && replyingState.isShowing;
 
     let recommendedSubredditNames = [];
     if (post && post.subreddit in recommendedSrs) {

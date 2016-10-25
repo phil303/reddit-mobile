@@ -274,18 +274,14 @@ const selector = createSelector(
   (state, props) => state.comments[props.commentId],
   (state, props) => state.moreCommentsRequests[props.commentId] || DEFAULT_COMMENT_REQUEST,
   (state, props) => !!state.collapsedComments[props.commentId],
-  (state, props) => {
-    const replyState = state.replying[props.commentId];
-    const foo = replyState && replyState.isShowing;
-    console.log("foo", foo);
-    return foo;
-  },
+  (state, props) => state.replying[props.commentId],
   (state, props) => state.editingText[props.commentId],
 
-  (user, currentPage, comment, moreCommentStatus, commentCollapsed, commentReplying, editingState) => {
+  (user, currentPage, comment, moreCommentStatus, commentCollapsed, replying, editingState) => {
     const editing = !!editingState;
     const editPending = editing && editingState.pending;
     const editError = editing ? editingState.error : null;
+    const commentReplying = !!replying && replying.isShowing;
 
     return {
       user,
