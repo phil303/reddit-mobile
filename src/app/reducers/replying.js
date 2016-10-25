@@ -12,13 +12,22 @@ export default function (state=DEFAULT, action={}) {
       return DEFAULT;
     }
 
-    case replyActions.SUCCESS:
+    case replyActions.PENDING: {
+      return merge(state, {
+        [action.id]: { content: action.content, isShowing: false },
+      });
+    }
+
+    case replyActions.SUCCESS: {
+      return merge(state, { [action.id]: { content: null } });
+    }
+
     case replyActions.TOGGLE: {
       if (state[action.id]) {
-        return merge(state, { [action.id]: false });
+        return merge(state, { [action.id]: { isShowing: false } });
       }
 
-      return merge(state, { [action.id]: true });
+      return merge(state, { [action.id]: { isShowing: true } });
     }
 
     default: return state;

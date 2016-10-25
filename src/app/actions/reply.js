@@ -9,10 +9,12 @@ import modelFromThingId from 'app/reducers/helpers/modelFromThingId';
 
 
 export const TOGGLE = 'REPLY__TOGGLE';
+export const PENDING = 'REPLY__PENDING';
 export const SUCCESS = 'REPLY__SUCCESS';
 export const FAILURE = 'REPLY__FAILURE';
 
 export const toggle = id => ({ type: TOGGLE, id });
+export const pending = (id, content) => ({ type: PENDING, id, content });
 export const success = (id, reply) => ({
   id,
   type: SUCCESS,
@@ -28,6 +30,8 @@ export const submit = (id, { text }) => async (dispatch, getState) => {
     dispatch({ type: FAILURE });
     return;
   }
+
+  dispatch(pending(id, text));
 
   try {
     const apiResponse = await model.reply(apiOptionsFromState(state), text);

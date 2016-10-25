@@ -2,6 +2,7 @@ import './styles.less';
 
 import React from 'react';
 import { connect } from 'react-redux';
+import { createSelector } from 'reselect';
 
 import { JSForm } from '@r/platform/components';
 
@@ -32,16 +33,20 @@ export class CommentReplyForm extends React.Component {
   }
 
   render () {
-    const { onToggleReply, onSubmitReply } = this.props;
+    const { onToggleReply, onSubmitReply, currentContent } = this.props;
     const { disableButton, text } = this.state;
     const buttonClass = cx('Button', { 'm-disabled': disableButton });
 
     return (
       <JSForm onSubmit={ onSubmitReply } className='CommentReplyForm'>
         <div className='CommentReplyForm__textarea'>
-          <textarea className='TextField' name='text' onChange={ this.onTextChange }>
-            { text }
-          </textarea>
+          <textarea
+            className='TextField'
+            name='text'
+            onChange={ this.onTextChange }
+            defaultValue={ currentContent }
+            value={ text }
+          />
         </div>
 
         <div className='CommentReplyForm__footer'>
@@ -61,8 +66,13 @@ export class CommentReplyForm extends React.Component {
   }
 }
 
+const mapStateToProps = createSelector(
+  state => state.replying.content || '',
+  currentContent => ({ currentContent }),
+);
+
 const mapDispatchToProps = (dispatch, { parentId }) => ({
   onSubmitReply: text => dispatch(replyActions.submit(parentId, text)),
 });
 
-export default connect(null, mapDispatchToProps)(CommentReplyForm);
+export default connect(mapStateToProps, mapDispatchToProps)(CommentReplyForm);
