@@ -2,7 +2,7 @@ import './styles.less';
 import React from 'react';
 import { Anchor } from '@r/platform/components';
 
-import { short } from 'lib/formatDifference';
+import formatElapsedTime from 'lib/formatElapsedTime';
 import mobilify from 'lib/mobilify';
 
 import { models } from '@r/api-client';
@@ -131,16 +131,14 @@ function renderAuthorAndTimeStamp(post, single, hideWhen) {
       <span>
         { authorLink }
         { SEPERATOR }
-        { short(createdUTC) }
+        { formatElapsedTime(createdUTC) }
       </span>
    );
   }
 
   return (
     <span>
-      { short(createdUTC) }
-      { SEPERATOR }
-      { authorLink }
+      { formatElapsedTime(createdUTC) }
     </span>
  );
 }

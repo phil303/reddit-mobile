@@ -2,7 +2,7 @@ import './Message.less';
 import React from 'react';
 import { Anchor } from '@r/platform/components';
 
-import { short } from 'lib/formatDifference';
+import formatElapsedTime from 'lib/formatElapsedTime';
 import RedditLinkHijacker from 'app/components/RedditLinkHijacker';
 
 const T = React.PropTypes;
@@ -31,7 +31,7 @@ export default function MessagesMessage(props) {
             { message.author }
           </Anchor>
           { SEPARATOR }
-          { short(message.createdUTC) }
+          { formatElapsedTime(message.createdUTC) }
         </div>
         <Anchor
           className='MessagesMessage__link icon icon-nav-arrowforward'

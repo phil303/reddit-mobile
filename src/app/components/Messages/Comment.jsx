@@ -2,7 +2,7 @@ import './Comment.less';
 import React from 'react';
 import { Anchor } from '@r/platform/components';
 
-import { short } from 'lib/formatDifference';
+import formatElapsedTime from 'lib/formatElapsedTime';
 import RedditLinkHijacker from 'app/components/RedditLinkHijacker';
 
 const T = React.PropTypes;
@@ -35,7 +35,7 @@ export default function MessagesComment(props) {
           { comment.subreddit }
         </Anchor>
         { SEPARATOR }
-        { short(comment.createdUTC) }
+        { formatElapsedTime(comment.createdUTC) }
       </div>
       <RedditLinkHijacker>
         <div

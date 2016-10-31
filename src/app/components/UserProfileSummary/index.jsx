@@ -5,7 +5,8 @@ import { models } from '@r/api-client';
 import { Anchor } from '@r/platform/components';
 
 import { formatNumber } from 'lib/formatNumber';
-import { short, long } from 'lib/formatDifference';
+import { long } from 'lib/formatDifference';
+import formatElapsedTime from 'lib/formatElapsedTime';
 
 const T = React.PropTypes;
 
@@ -23,7 +24,7 @@ export const UserProfileSummary = props => {
           <UserProfileBadgeIcon iconName='karma' color='orangered' />
         </UserProfileBadge>
         <UserProfileBadge
-          text={ short(user.createdUTC) }
+          text={ formatElapsedTime(user.createdUTC) }
           subtext='REDDIT AGE'
           half={ true }
         >

@@ -57,20 +57,6 @@ export const formatPartsFromNow = (unixTime, format) => {
   return parts;
 };
 
-// return a shorthand string describing the differnece between now and then given unix timesamp
-// shorthand means that instead of "year", we'd return "y", and instead of 'day', we'd return 'd'.
-// we also want it to be concise so we'll only use the first unit of time (see above) that describes
-// the difference. (.e.g. 2months, 3weeks, and 1day ago will be formatted as '2m')
-export const short = unixTime => {
-  // use short names for the parts, and only use the first part
-  return formatPartsFromNow(unixTime, {
-    years: 'y',
-    days: 'd',
-    hours: 'h',
-    minutes: 'm',
-  }).slice(0, 1).join(', ');
-};
-
 // return a string describing the difference between now and the given unix timestamp.
 // `long` is in contrast to `short` that's above, it will return the full name for units of time.
 // however it only cares about 'years', 'months', and 'days'. So a date thats:
