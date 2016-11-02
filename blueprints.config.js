@@ -1,7 +1,22 @@
+var child_process = require('child_process');
 var configs = require('@r/build/lib/configs');
 
-module.exports = function(isProduction, release) {
-  var clientConfig = configs.getClientConfig(isProduction, release);
+function generateReleaseVersion() {
+  try {
+    return child_process
+      .execSync('git rev-parse --short HEAD')
+      .toString().trim();
+  } catch (e) {
+    return Math.random().toString(36).slice(2);
+  }
+}
+
+module.exports = function(isProduction) {
+  var release = generateReleaseVersion();
+  var clientConfig = configs.getClientConfig(isProduction, {
+    sentryProject: 'mobile-web',
+    release: release,
+  });
   var serverConfig = configs.getServerConfig(isProduction);
 
   // Copy static files for deploying / serving. We also use these in debug
