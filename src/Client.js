@@ -23,7 +23,9 @@ import * as smartBannerActions from 'app/actions/smartBanner';
 
 // TODO move this url into config (possibly even ENV variable)
 Raven
-  .config('https://d695bba132494ac6863a7a3ec5945e9d@sentry.io/110300')
+  .config('https://d695bba132494ac6863a7a3ec5945e9d@sentry.io/110300', {
+    release: __GLOBALS__.release,
+  })
   .install();
 
 // Bits to help in the gathering of client side timings to relay back

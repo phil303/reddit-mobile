@@ -1,7 +1,7 @@
 var configs = require('@r/build/lib/configs');
 
-module.exports = function(isProduction) {
-  var clientConfig = configs.getClientConfig(isProduction);
+module.exports = function(isProduction, release) {
+  var clientConfig = configs.getClientConfig(isProduction, release);
   var serverConfig = configs.getServerConfig(isProduction);
 
   // Copy static files for deploying / serving. We also use these in debug
@@ -29,6 +29,9 @@ module.exports = function(isProduction) {
         TRACKER_ENDPOINT: JSON.stringify(process.env.TRACKER_ENDPOINT),
         TRACKER_KEY: JSON.stringify(process.env.TRACKER_KEY),
         TRACKER_SECRET: JSON.stringify(process.env.TRACKER_SECRET),
+      },
+      '__GLOBALS__': {
+        release: JSON.stringify(release),
       },
     },
   ]);
