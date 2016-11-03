@@ -21,9 +21,8 @@ import { sendTimings, onHandlerCompleteTimings } from 'lib/timing';
 import Session from 'app/models/Session';
 import * as smartBannerActions from 'app/actions/smartBanner';
 
-// TODO move this url into config (possibly even ENV variable)
 Raven
-  .config('https://d695bba132494ac6863a7a3ec5945e9d@sentry.io/110300', {
+  .config(process.env.SENTRY_ERROR_ENDPOINT, {
     release: __GLOBALS__.release,
   })
   .install();

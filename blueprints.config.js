@@ -44,6 +44,7 @@ module.exports = function(isProduction) {
         TRACKER_ENDPOINT: JSON.stringify(process.env.TRACKER_ENDPOINT),
         TRACKER_KEY: JSON.stringify(process.env.TRACKER_KEY),
         TRACKER_SECRET: JSON.stringify(process.env.TRACKER_SECRET),
+        SENTRY_ERROR_ENDPOINT: JSON.stringify(process.env.SENTRY_ERROR_ENDPOINT),
       },
       '__GLOBALS__': {
         release: JSON.stringify(release),
